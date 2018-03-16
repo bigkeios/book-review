@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Post's title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="post-main.css" />
+    <script src="categs-import.js"></script>
+    <script src="tags-import.js"></script>
+    <script src="post-comment-modify-option.js"></script>
+
+</head>
+<body>
+    <div class="body">
+        <div class="row">
+            <div class="col-8 posts">
+                <div class="post">
+                    <div class="modifyOption">
+                        <a href="#optionIconPost"><span><img class="optionIcon" id="optionIconPost"src="option.svg" height="15" width="15"></span></a>
+                        <ul class="optionMenu" id="optionMenuPost"style="display:none">
+                            <li><a class="editOption" >Edit</a></li>
+                            <li><a href="#deleteOptionPost" class="deleteOption" id="deleteOptionPost">Delete</a></li>
+                        </ul>
+                    </div>
+                    <h3 id="post-title">Post's title</h3>
+                    <small><h3>Posted by author name on date</h3></small>
+                    <hr></hr>
+                    <p class="post-content">Enim in minim id mollit cillum Lorem aliqua exercitation mollit in eiusmod dolor veniam. Commodo do aliquip do ad aliquip cupidatat aute. Ad aliquip eiusmod id exercitation magna ut ex. Mollit laborum tempor voluptate velit proident non occaecat laboris mollit aute mollit esse. Quis laborum qui amet ut consequat. Et adipisicing et quis et nisi. Veniam ut Lorem magna id veniam velit ipsum excepteur fugiat reprehenderit ea nisi enim eu.</p>
+                    <br>
+                    <p>Category: <span class="categ">Fantasy</span></p>
+                    <br>
+                    <p>Tags: <span class="tag">spoiler-alert</span></p>
+                    <hr>
+                </div>
+            </div>
+            <!-- end col-8 post -->
+            <div class="col-4 side-menu">
+                <div class="categs">
+                    <div class="menu-head">
+                        <h3>Category</h3>
+                    </div>
+                </div>
+                <!-- end categ -->
+                <div class="archive">
+                    <div class="menu-head">
+                        <h3>Archive</h3>
+                    </div>
+                </div>
+                <!-- end archive -->
+                <div class="tags">
+                    <div class="menu-head">
+                        <h3>Tags</h3>
+                    </div>
+                </div>
+                <!-- end tags -->
+            </div>
+            <!-- end col-4 side-menu -->
+        </div>
+        <div class="comment-section">
+            <h3>Comment</h3>
+            <form class="comment-form">
+                <textarea placeholder="Enter your comment" rows="5" cols="100"></textarea>
+                <input type="submit" value="Send">
+            </form>
+            <div class="comments">
+                <div class="comment">
+                    <div class="modifyOption">
+                        <a href="#optionIconCmt"><span><img class="optionIcon" id="optionIconCmt"src="option.svg" height="15" width="15"></span></a>
+                        <ul class="optionMenu" id="optionMenuCmt"style="display:none">
+                            <li><a class="editOption">Edit</a></li>
+                            <li><a href="#deleteOptionCmt" class="deleteOption" id="deleteOptionCmt">Delete</a></li>
+                        </ul>
+                    </div>
+                    <h4>Username</h4>
+                    <p class="comment-content">Ipsum Lorem Lorem aliquip consectetur nisi magna ex duis anim nisi adipisicing nisi occaecat minim. Minim ad exercitation labore incididunt amet adipisicing reprehenderit cupidatat adipisicing fugiat cillum laboris. Cupidatat reprehenderit officia mollit enim aute ut exercitation. Nulla do proident cupidatat mollit eu minim sit duis minim dolor dolor id et enim. Laborum elit Lorem dolor ea. Lorem sunt eu amet nisi elit ad irure nulla Lorem elit velit.</p>
+                    <br></br>
+                </div>
+            </div>
+        </div>
+        <!-- end comment-section -->
+    </div>
+    <!-- end body -->
+</body>
+</html>

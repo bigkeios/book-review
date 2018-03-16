@@ -1,0 +1,35 @@
+.comment-section input[type=submit]
+{
+    display: block;
+}
+.col-8
+{
+    float: left;
+    width: 57%;
+    padding: 3%;
+    box-sizing: border-box;
+    border-right: 2px solid #004d66;
+}
+.col-4
+{
+    float: right;
+    width: 37%;
+    padding: 3%;
+}
+.optionIcon
+{
+    float: right;
+}
+.optionMenu
+{
+    width: 100px;
+    background:white;
+    float: right;
+    text-align: left;
+    padding: 3px 3px;
+    box-shadow: 5px 5px 5px grey;
+}
+.optionMenu li
+{
+    list-style-type: none;
+}

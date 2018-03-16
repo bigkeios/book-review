@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "AnotherTree",
+        "email": "",
+        "password": "",
+        "role": ""
+    },
+    {
+        "id": 2,
+        "name": "BookHolic",
+        "email": "",
+        "password": "",
+        "role": ""
+    }
+]

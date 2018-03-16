@@ -1,0 +1,8 @@
+.log-in-form input[type=submit]
+{
+    display: block;
+}
+.col-5
+{
+    float:left;
+}

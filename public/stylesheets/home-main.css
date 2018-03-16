@@ -1,0 +1,10 @@
+.col-8
+{
+    float: left;
+    box-sizing: border-box;
+    border-right: 2px solid #004d66;
+}
+.col-4
+{
+    float: right;
+}

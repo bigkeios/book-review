@@ -1,0 +1,9 @@
+.post-form label[for=post-tag]
+{
+    display: block;
+    margin-bottom: 5px;
+}
+.alert
+{
+    color: red;
+}

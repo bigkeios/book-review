@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Compose post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="compose-post-main.css" />
+    <script src="discard-posts-changes.js"></script>
+    <script src="check-fields-posts.js"></script>
+</head>
+<body>
+    <div class="body">
+    <h2 id="purpose-for-editor">Compose a look into a book</h2>
+    <hr>
+    <form id="postForm">
+        <label for="postTitle">Title</label>
+        <input type="text" placeholder="Enter the title" id="postTitle">
+        <small><p class="alert" id="titleAlert"></p></small>
+        <label for="postContent">Content</label>
+        <textarea id="postContent" placeholder="Enter the content of the post" rows="20" cols="150"></textarea>
+        <small><p class="alert" id="contentAlert"></p></small>
+        <p>Category</p>
+        <input type="radio" id="post-categ-choice-1" value="non-fiction">
+        <label for="post-categ-choice-1">Non-fiction</label>
+        <label for="post-tag">Tags</label>
+        <input type="text" placeholder="Enter the tags for the post here, each are separate by a comma" id="postTag">
+        <small><p class="alert" id="tagAlert"></p></small>
+        <input type="submit" value="Send">
+        <input type="button" value="Cancel" id="discardPost">
+    </form>
+    </div>
+</body>
+</html>
