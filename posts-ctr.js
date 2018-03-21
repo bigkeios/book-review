@@ -23,3 +23,8 @@ exports.listAllPosts = function(req, res)
         res.send(msgSuccess);
     });
 }
+exports.postReview = function(req, res)
+{
+    var query = 'INSERT '
+    connection.query()
+}

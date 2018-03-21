@@ -20,14 +20,17 @@ function populatePost(jsonData)
         var readMore = document.createElement('a');
         //putting data into newly created elements
         postTitle.textContent = jsonData[i].title;
-        postContent.textContent = jsonData[i].content[0];
+        // limit 100 characters to show only preview
+        postContent.textContent = jsonData[i].content[100];
         // var authorName = "";
         // jsonData[1].forEach(function(author, j)
         // {
         //     if(jsonData[0][i].createUserId == author[j].id)
         //         authorName = author[j].name;
         // })
-        detail.textContent = 'Posted on ' + jsonData[i].dateCreated; 
+        var dateCreated = new Date(jsonData[i].dateCreated);
+        // toDateString returns on date, not specific time
+        detail.textContent = 'Posted on ' + dateCreated.toDateString();
         readMore.textContent = 'Read More...';
         readMore.setAttribute('href', '#');
         //append the new elements into the document (posts div to be specific)
