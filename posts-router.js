@@ -10,4 +10,5 @@ module.exports = function(app)
         next();
     });
     app.route('/posts').get(postsCtr.listAllPosts);
+    app.route('/compose-post').post(postsCtr.sendPost);
 }

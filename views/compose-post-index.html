@@ -5,31 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Compose post</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="compose-post-main.css" />
-    <script src="discard-posts-changes.js"></script>
-    <script src="check-fields-posts.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/compose-post-main.css" />
+    <script src="../scripts/post-send.js"></script>
 </head>
 <body>
     <div class="body">
-    <h2 id="purpose-for-editor">Compose a look into a book</h2>
-    <hr>
-    <form id="postForm">
-        <label for="postTitle">Title</label>
+        <h2 id="purpose-for-editor">Compose a look into a book</h2>
+        <hr>
+        <h3>Title</h3>
         <input type="text" placeholder="Enter the title" id="postTitle">
         <small><p class="alert" id="titleAlert"></p></small>
-        <label for="postContent">Content</label>
+        <h3>Content</h3>
         <textarea id="postContent" placeholder="Enter the content of the post" rows="20" cols="150"></textarea>
         <small><p class="alert" id="contentAlert"></p></small>
-        <p>Category</p>
-        <input type="radio" id="post-categ-choice-1" value="non-fiction">
-        <label for="post-categ-choice-1">Non-fiction</label>
-        <label for="post-tag">Tags</label>
+        <h3> Category </h3>
+        <h3>Tags</h3>
         <input type="text" placeholder="Enter the tags for the post here, each are separate by a comma" id="postTag">
         <small><p class="alert" id="tagAlert"></p></small>
-        <input type="submit" value="Send">
+        <input type="submit" value="Send" id="submitButton">
         <input type="button" value="Cancel" id="discardPost">
-    </form>
     </div>
 </body>
 </html>

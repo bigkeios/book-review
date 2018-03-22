@@ -1,6 +1,6 @@
 var posts = document.getElementsByClassName('posts');
 var request = new XMLHttpRequest();
-request.open('GET', 'http://localhost:8000/posts/', true);
+request.open('GET', 'http://localhost:8000/posts/');
 // request.onreadystatechange = handler;
 request.onload = function()
 {
@@ -21,7 +21,10 @@ function populatePost(jsonData)
         //putting data into newly created elements
         postTitle.textContent = jsonData[i].title;
         // limit 100 characters to show only preview
-        postContent.textContent = jsonData[i].content[100];
+        for(var j of jsonData[i])
+        {
+            postContent.textContent += jsonData[i].content[j];
+        }
         // var authorName = "";
         // jsonData[1].forEach(function(author, j)
         // {

@@ -1,4 +1,5 @@
 var connection = require('./connection');
+var bodyParser = require('body-parser');
 exports.listAllPosts = function(req, res)
 {
     let promise = new Promise(function(resolve, reject)
@@ -20,11 +21,33 @@ exports.listAllPosts = function(req, res)
         res.send(msgSuccess);
     }, function(msgFail)
     {
-        res.send(msgSuccess);
+        res.send(msgFail);
     });
 }
-exports.postReview = function(req, res)
+exports.sendPost = function(req, res)
 {
-    var query = 'INSERT '
-    connection.query()
+    // express requires body-parser to populate request body
+    req.app.use(bodyParser.json());
+    var posts = req.body;
+    let promise = new Promise(function(resolve, reject)
+    {
+        connection.query('INSERT INTO post VALUES ?', posts, function(err, rows, fields)
+        {
+            if(err)
+            {
+                return reject(new Error('Error connecting'));
+            }
+            else
+            {
+                return resolve(posts);
+            }
+        });
+    });
+    promise.then(function(msgSuccess)
+    {
+        res.send(msgSuccess);  
+    }, function(msgFail)
+    {
+        res.send(msgFail);
+    });
 }
