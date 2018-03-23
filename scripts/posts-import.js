@@ -21,10 +21,11 @@ function populatePost(jsonData)
         //putting data into newly created elements
         postTitle.textContent = jsonData[i].title;
         // limit 100 characters to show only preview
-        for(var j of jsonData[i])
+        for(var j=0; j < 100; ++j)
         {
             postContent.textContent += jsonData[i].content[j];
         }
+        postContent.textContent += "...";
         // var authorName = "";
         // jsonData[1].forEach(function(author, j)
         // {
