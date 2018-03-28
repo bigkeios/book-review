@@ -7,31 +7,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/post-main.css" />
+    <script src="../scripts/post-comment-modify-option.js"></script>
+    <!-- <script src="../scripts/post-load.js"></script> -->
 </head>
 <body>
+<div class="header">
+    <h1>A book-review blog</h1>
+    <div class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Log in</a></li>
+            <li><a href="#">Sign up</a></li>
+            <li><a href="#"><button>Compose a post</button></a></li>
+        </ul>
+    </div>
+    <!-- end navbar -->
+</div>
+<!-- end header -->
     <div class="body">
         <div class="row">
             <div class="col-8 posts">
                 <div class="post">
-                    <div class="modifyOption">
-                        <a href="#optionIconPost"><span><img class="optionIcon" id="optionIconPost"src="option.svg" height="15" width="15"></span></a>
-                        <ul class="optionMenu" id="optionMenuPost"style="display:none">
-                            <li><a class="editOption" >Edit</a></li>
-                            <li><a href="#deleteOptionPost" class="deleteOption" id="deleteOptionPost">Delete</a></li>
+                    <div class="modifyMenu">
+                        <a href="#"><span><img class="menuSelect" id="menuSelectOnPost" src="../public/option.svg" height="15" width="15"></span></a>
+                        <ul id="menuOptionsOnPost" style="display:none">
+                            <li><a class="editOption" id="editOptionOnPost">Edit</a></li>
+                            <li><a href="#deleteOptionOnPost" class="deleteOption" id="deleteOptionOnPost" >Delete</a></li>
                         </ul>
                     </div>
-                    <h3 id="post-title">Post's title</h3>
-                    <small><h3>Posted by author name on date</h3></small>
-                    <hr></hr>
-                    <p class="post-content">Enim in minim id mollit cillum Lorem aliqua exercitation mollit in eiusmod dolor veniam. Commodo do aliquip do ad aliquip cupidatat aute. Ad aliquip eiusmod id exercitation magna ut ex. Mollit laborum tempor voluptate velit proident non occaecat laboris mollit aute mollit esse. Quis laborum qui amet ut consequat. Et adipisicing et quis et nisi. Veniam ut Lorem magna id veniam velit ipsum excepteur fugiat reprehenderit ea nisi enim eu.</p>
-                    <br>
-                    <p>Category: <span class="categ">Fantasy</span></p>
-                    <br>
-                    <p>Tags: <span class="tag">spoiler-alert</span></p>
-                    <hr>
+                    <!-- end modifyOption -->
                 </div>
+                <!-- end post -->
             </div>
-            <!-- end col-8 post -->
+            <!-- end col-8 posts -->
             <div class="col-4 side-menu">
                 <div class="categs">
                     <div class="menu-head">
@@ -54,26 +63,28 @@
             </div>
             <!-- end col-4 side-menu -->
         </div>
-        <div class="comment-section">
+        <div class="commentSection">
             <h3>Comment</h3>
-            <form class="comment-form">
+            <form class="commentForm">
                 <textarea placeholder="Enter your comment" rows="5" cols="100"></textarea>
                 <input type="submit" value="Send">
             </form>
             <div class="comments">
                 <div class="comment">
-                    <div class="modifyOption">
-                        <a href="#optionIconCmt"><span><img class="optionIcon" id="optionIconCmt"src="option.svg" height="15" width="15"></span></a>
-                        <ul class="optionMenu" id="optionMenuCmt"style="display:none">
-                            <li><a class="editOption">Edit</a></li>
-                            <li><a href="#deleteOptionCmt" class="deleteOption" id="deleteOptionCmt">Delete</a></li>
+                    <div class="modifyMenu">
+                        <a href="#"><span><img class="menuSelect" id="menuSelectOnCmt"src="../public/option.svg" height="15" width="15"></span></a>
+                        <ul id="menuOptionsOnCmt" style="display:none">
+                            <li><a class="editOption" id="editOptionOnCmt">Edit</a></li>
+                            <li><a href="#deleteOptionOnCmt" class="deleteOption" id="deleteOptionOnCmt">Delete</a></li>
                         </ul>
                     </div>
                     <h4>Username</h4>
                     <p class="comment-content">Ipsum Lorem Lorem aliquip consectetur nisi magna ex duis anim nisi adipisicing nisi occaecat minim. Minim ad exercitation labore incididunt amet adipisicing reprehenderit cupidatat adipisicing fugiat cillum laboris. Cupidatat reprehenderit officia mollit enim aute ut exercitation. Nulla do proident cupidatat mollit eu minim sit duis minim dolor dolor id et enim. Laborum elit Lorem dolor ea. Lorem sunt eu amet nisi elit ad irure nulla Lorem elit velit.</p>
                     <br></br>
                 </div>
+                <!-- end comment -->
             </div>
+            <!-- end comments -->
         </div>
         <!-- end comment-section -->
     </div>

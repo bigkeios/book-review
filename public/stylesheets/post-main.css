@@ -1,4 +1,4 @@
-.comment-section input[type=submit]
+.commentSection input[type=submit]
 {
     display: block;
 }
@@ -16,11 +16,11 @@
     width: 37%;
     padding: 3%;
 }
-.optionIcon
+.menuSelect
 {
     float: right;
 }
-.optionMenu
+.modifyMenu
 {
     width: 100px;
     background:white;
@@ -29,7 +29,7 @@
     padding: 3px 3px;
     box-shadow: 5px 5px 5px grey;
 }
-.optionMenu li
+.modifyMenu li
 {
     list-style-type: none;
 }

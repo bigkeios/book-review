@@ -12,4 +12,5 @@ module.exports = function(app)
     });
     app.route('/posts').get(postsCtr.listAllPosts);
     app.route('/compose-post').post(postsCtr.sendPost);
+    app.route('/posts/:post_id').get(postsCtr.getPostById);
 }

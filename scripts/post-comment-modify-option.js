@@ -2,26 +2,26 @@ window.onload = function()
 {
     // toggle the menu edit/delete
     // get the menu and icon to edit/delete post
-    var modifyEle = document.getElementsByClassName('modifyOption');
+    var modifyMenu = document.getElementsByClassName('modifyMenu');
     // get the one of the post div
-    var menuPost = modifyEle.item(0);
+    var menuPost = modifyMenu.item(0);
     // get the one of the comment div
-    var menuCmt = modifyEle.item(1);
+    var menuCmt = modifyMenu.item(1);
     menuPost.addEventListener('click', toggleMenu);
     menuCmt.addEventListener('click', toggleMenu);
-    function toggleMenu(evt)
+    function toggleMenu(e)
     {
         // evt.target -> menuPost/menuCmt/anything call toggleMenu in its eventListener
         // we got clickedIcon bc we clicked on the icon and the id returned is from the icon
-        var clickedIcon = document.getElementById(evt.target.getAttribute('id'));
+        var clickedIcon = document.getElementById(e.target.getAttribute('id'));
         var menu;
-        if(clickedIcon.getAttribute('id') === 'optionIconPost')
+        if(clickedIcon.getAttribute('id') === 'menuSelectOnPost')
         {
-            menu = document.getElementById('optionMenuPost');
+            menu = document.getElementById('menuOptionsOnPost');
         }
-        else if(clickedIcon.getAttribute('id') === 'optionIconCmt')
+        else if(clickedIcon.getAttribute('id') === 'menuSelectOnCmt')
         {
-            menu = document.getElementById('optionMenuCmt');
+            menu = document.getElementById('menuOptionsOnCmt');
         }
         try
         {
@@ -47,17 +47,17 @@ window.onload = function()
     deleteOption.item(0).addEventListener('click', alertDelete);
     // get the delete option in the comment div
     deleteOption.item(1).addEventListener('click', alertDelete);
-    function alertDelete(evt)
+    function alertDelete(e)
     {
-        // evt plays the same role as in toggleMenu
+        // e plays the same role as in toggleMenu
         // get the id of the option to know where it is from
-        var clickedOptionID = evt.target.getAttribute('id');
+        var clickedOptionID = e.target.getAttribute('id');
         var eleType;
-        if(clickedOptionID === 'deleteOptionPost')
+        if(clickedOptionID === 'deleteOptionOnPost')
         {
             eleType = 'post';
         }
-        else if(clickedOptionID === 'deleteOptionCmt')
+        else if(clickedOptionID === 'deleteOptionOnCmt')
         {
             eleType = 'comment';
         }

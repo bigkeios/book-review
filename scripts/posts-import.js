@@ -1,7 +1,6 @@
 var posts = document.getElementsByClassName('posts');
 var request = new XMLHttpRequest();
 request.open('GET', 'http://localhost:8000/posts/');
-// request.onreadystatechange = handler;
 request.onload = function()
 {
     var data = JSON.parse(this.response);
@@ -14,6 +13,7 @@ function populatePost(jsonData)
         // creating div to store a post with its attributes
         var post = document.createElement('div');
         post.setAttribute('class', 'post');
+        post.setAttribute('id', jsonData[i].id + '');
         var postTitle = document.createElement('h3');
         var detail = document.createElement('h4');
         var postContent = document.createElement('p');
@@ -26,16 +26,11 @@ function populatePost(jsonData)
             postContent.textContent += jsonData[i].content[j];
         }
         postContent.textContent += "...";
-        // var authorName = "";
-        // jsonData[1].forEach(function(author, j)
-        // {
-        //     if(jsonData[0][i].createUserId == author[j].id)
-        //         authorName = author[j].name;
-        // })
         var dateCreated = new Date(jsonData[i].dateCreated);
         // toDateString returns on date, not specific time
         detail.textContent = 'Posted on ' + dateCreated.toDateString();
         readMore.textContent = 'Read More...';
+        readMore.setAttribute('id', 'readMore');
         readMore.setAttribute('href', '#');
         //append the new elements into the document (posts div to be specific)
         // posts is obtained from getElementByClassName so it is a HTMLCollection -> access first elements through item()

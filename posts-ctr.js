@@ -36,10 +36,9 @@ module.exports = {
             var post = req.body;
             var query = connection.query('INSERT INTO post SET title = ?, content = ?, dateCreated = ?, dateModified = ?, categId = ?, user_id = ?', [post.title, post.content, post.dateCreated, post.dateModified, post.categId, post.user_id], function(err, rows, fields)
             {
-                console.log(query.sql);
                 if(err)
                 {   
-                    console.log('Error happened')
+                    console.log('Error querying')
                     return reject(new Error('Error connecting'));
                 }
                 else
@@ -55,5 +54,30 @@ module.exports = {
         {
             res.send(msgFail);
         }); 
+    },
+    getPostById: function(req, res)
+    {
+        let promise = new Promise(function(resolve, reject)
+        {
+           var query = connection.query('SELECT * FROM post WHERE id = ?', [req.params.post_id], function(err, rows, fields)
+            {
+               if(err)
+               {
+                   console('Error querying');
+                   return reject(new Error('Error querying'));
+               } 
+               else
+               {
+                   return resolve(rows);
+               }
+            }); 
+        });
+        promise.then(function(msgSuccess)
+        {
+            res.send(msgSuccess);
+        }, function(msgFail)
+        {
+           res.send(msgFail);
+        });
     }
 }
