@@ -11,7 +11,7 @@ module.exports = function(app, express)
         next();
     });
     // specify the root for all the files used
-    // app.use(express.static(__dirname));
+    app.use(express.static(__dirname));
     app.set('views', __dirname+'/views');
     // using ejs as the view renderer for html
     app.engine('html', require('ejs').renderFile);
