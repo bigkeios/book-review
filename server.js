@@ -5,5 +5,5 @@ var routes = require('./posts-router');
 var app = express();
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-routes(app);
+routes(app, express);
 app.listen(8000);

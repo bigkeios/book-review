@@ -7,5 +7,5 @@ window.onload = function()
     {
         window.location.href = 'post-view-index.html';
     }
-    export{postID};
+    export {postID};
 }

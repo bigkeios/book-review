@@ -1,6 +1,6 @@
 window.onload = function()
     {
-        import postID from './post-direct-single-page';
+        import postID from './post-direct-single-page.js';
         var request = new XMLHttpRequest();
         // request.open('GET', '../static data/posts.json', true);
         request.open('GET', 'http://localhost:8000/posts/' + postID + '');

@@ -1,6 +1,6 @@
 var posts = document.getElementsByClassName('posts');
 var request = new XMLHttpRequest();
-request.open('GET', 'http://localhost:8000/posts/');
+request.open('GET', 'http://localhost:8000/api/posts/');
 request.onload = function()
 {
     var data = JSON.parse(this.response);
@@ -31,7 +31,7 @@ function populatePost(jsonData)
         detail.textContent = 'Posted on ' + dateCreated.toDateString();
         readMore.textContent = 'Read More...';
         readMore.setAttribute('id', 'readMore');
-        readMore.setAttribute('href', '#');
+        readMore.setAttribute('href', './post-view-index.html');
         //append the new elements into the document (posts div to be specific)
         // posts is obtained from getElementByClassName so it is a HTMLCollection -> access first elements through item()
         posts.item(0).appendChild(post);
