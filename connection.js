@@ -5,7 +5,7 @@ var connection = mysql.createConnection(
         host: 'localhost',
         user: 'root',
         password: 'IchgsmPW8*',
-        database: 'blogschema',
+        database: 'bookReviewBlogDB',
     }
 )
 module.exports = connection;

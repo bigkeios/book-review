@@ -1,3 +1,4 @@
+var ejs = require('ejs');
 // the module when use: name(app)
 module.exports = function(app)
 {

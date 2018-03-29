@@ -13,7 +13,7 @@ function populatePost(jsonData)
         // creating div to store a post with its attributes
         var post = document.createElement('div');
         post.setAttribute('class', 'post');
-        post.setAttribute('id', jsonData[i].id + '');
+        post.setAttribute('id', jsonData[i].idposts + '');
         var postTitle = document.createElement('h3');
         var detail = document.createElement('h4');
         var postContent = document.createElement('p');

@@ -1,23 +1,12 @@
 window.onload = function()
-{
-    var readMore = document.getElementById('readMore');
-    var postID = document.getElementsByClassName('post').item(0).getAttribute('id');
-    readMore.addEventListener('click', loadAPost);
-    function loadAPost()
     {
-
-        window.location.href = 'post-view-index.html';
+        import postID from './post-direct-single-page';
         var request = new XMLHttpRequest();
         // request.open('GET', '../static data/posts.json', true);
         request.open('GET', 'http://localhost:8000/posts/' + postID + '');
         request.onload = function () 
         {
-            var data = JSON.parse(this.response);
-            populatePost(data);
-        }
-        request.send();
-        function populatePost(jsonData)
-        {
+            var jsonData = JSON.parse(this.response);
             var post = document.getElementsByClassName('post');
             post.item(0).setAttribute('id',jsonData.id);
             // attributes of the post body
@@ -32,5 +21,5 @@ window.onload = function()
             postContent.textContent = jsonData.content;
             post.item(0).appendChild(postContent);
         }
+        request.send();
     }
-}

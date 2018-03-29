@@ -6,7 +6,7 @@ module.exports = {
         // use promise to make sure the query is executed then the results will be returned
         let promise = new Promise(function(resolve, reject)
         {
-            connection.query('SELECT * FROM post', function(err, rows, fields)
+            connection.query('SELECT * FROM posts', function(err, rows, fields)
             {
             if(err)
             {
@@ -34,8 +34,9 @@ module.exports = {
             req.app.use(bodyParser.json());
             // if the body is not in the type specified, after option, head will not be returned
             var post = req.body;
-            var query = connection.query('INSERT INTO post SET title = ?, content = ?, dateCreated = ?, dateModified = ?, categId = ?, user_id = ?', [post.title, post.content, post.dateCreated, post.dateModified, post.categId, post.user_id], function(err, rows, fields)
+            var query = connection.query('INSERT INTO posts SET title = ?, content = ?, dateCreated = ?, dateModified = ?, userID = ?', [post.title, post.content, post.dateCreated, post.dateModified, post.userID], function(err, rows, fields)
             {
+                console.log(query.sql);
                 if(err)
                 {   
                     console.log('Error querying')
@@ -59,8 +60,9 @@ module.exports = {
     {
         let promise = new Promise(function(resolve, reject)
         {
-           var query = connection.query('SELECT * FROM post WHERE id = ?', [req.params.post_id], function(err, rows, fields)
+           var query = connection.query('SELECT * FROM posts WHERE idposts = ?', [req.params.post_id], function(err, rows, fields)
             {
+                console.log(query.sql);
                if(err)
                {
                    console('Error querying');
