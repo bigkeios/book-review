@@ -35,7 +35,7 @@ module.exports =
             req.app.use(bodyParser.json());
             // if the body is not in the type specified, after option, head will not be returned
             var post = req.body;
-            var query = connection.query('INSERT INTO posts SET title = ?, content = ?, dateCreated = ?, dateModified = ?, userID = ?', [post.title, post.content, post.dateCreated, post.dateModified, post.userID], function(err, rows, fields)
+            var query = connection.query('INSERT INTO posts SET title = ?, content = ?, dateCreated = ?, dateModified = ?, idusers = ?; SELECT LAST_INSERT_ID()', [post.title, post.content, post.dateCreated, post.dateModified, post.idusers], function(err, rows, fields)
             {
                 console.log(query.sql);
                 if(err)
@@ -45,7 +45,8 @@ module.exports =
                 }
                 else
                 {
-                    return resolve(post);
+                    console.log(rows);
+                    return resolve(rows);
                 }
             });
         });
@@ -72,6 +73,34 @@ module.exports =
                else
                {
                    return resolve(rows);
+               }
+            }); 
+        });
+        promise.then(function(msgSuccess)
+        {
+            res.send(msgSuccess);
+        }, function(msgFail)
+        {
+           res.send(msgFail);
+        });
+    },
+    recordPostCategRela: function(req, res)
+    {       
+        let promise = new Promise(function(resolve, reject)
+        {
+            req.app.use(bodyParser.json());
+            var rela = req.body; 
+           var query = connection.query('INSERT INTO posts_has_category SET idposts = ?, posts_idusers = ?, idCategory = ?', [rela.idposts], [rela.posts_iduser], [rela.idCategory], function(err, rows, fields)
+            {
+                console.log(query.sql);
+               if(err)
+               {
+                   console('Error querying');
+                   return reject(new Error('Error querying'));
+               } 
+               else
+               {
+                   return resolve(rela);
                }
             }); 
         });

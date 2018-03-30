@@ -4,6 +4,7 @@ window.onload = function()
     var url = window.location.href;
     var urlSplitted = url.split('/')
     var postID = urlSplitted[4];
+    // load post
     let promise = new Promise(function(resolve, reject)
     {
         var requestPost = new XMLHttpRequest();
@@ -31,6 +32,7 @@ window.onload = function()
         }
         requestPost.send();    
     });
+    // load categories of the post
     var requestCateg = new XMLHttpRequest();
     requestCateg.open('GET','http://localhost:8000/api/categs/'+postID);
     requestCateg.onload = function()
@@ -46,4 +48,23 @@ window.onload = function()
         post.item(0).appendChild(categsDetails);
     }
     requestCateg.send();
+    // load  comment of the post
+    var requestCmt = new XMLHttpRequest();
+    requestCmt.open('GET', 'http://localhost:8000/api/comments/'+postID);
+    requestCmt.onload = function()
+    {
+        var cmts = JSON.parse(this.response);
+        var comment = document.getElementsByClassName('comment');
+        for(var cmt of cmts)
+        {
+            var username = document.createElement('h4');
+            username.textContent = cmt.name;
+            comment.item(0).appendChild(username);
+            var cmtContent = document.createElement('p');
+            cmtContent.textContent = cmt.content;
+            comment.item(0).appendChild(cmtContent);
+            comment.item(0).appendChild(document.createElement('br'));
+        }        
+    }
+    requestCmt.send();
 }

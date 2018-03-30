@@ -21,6 +21,10 @@ module.exports = function(app, express)
     {
         res.render('home-view-index.html');     
     });
+    app.get('/home-view-index.html', function(req, res)
+    {
+        res.render('home-view-index.html');     
+    });
     // each post route
     app.get('/post-view-index/:post_id', function(req, res)
     {
@@ -50,4 +54,5 @@ module.exports = function(app, express)
     app.route('/api/posts').get(postsCtr.listAllPosts);
     app.route('/api/compose-post').post(postsCtr.sendPost);
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
+    app.route('/api/compose-post/has-categ').post(postsCtr.recordPostCategRela);
 }

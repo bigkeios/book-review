@@ -1,8 +1,37 @@
 window.onload = function()
 {
+    // load the categories
+    var categsSelect = document.getElementById('categoriesSelect');
+    var requestCateg = new XMLHttpRequest();
+    requestCateg.open('GET','http://localhost:8000/api/categs');
+    requestCateg.onload = function()
+    {
+        var categs = JSON.parse(this.response);
+        populateCategs(categs);
+    }
+    function populateCategs(data)
+    {
+        for(var i = 0; i < data.length; ++i)
+        {
+            var categSelection = document.createElement('input');
+            categSelection.setAttribute('type', 'radio');
+            categSelection.setAttribute('id', ''+data[i].idCategory);
+            categSelection.setAttribute('value', data[i].name);
+            categSelection.setAttribute('name', 'categ');
+            var label = document.createElement('label');
+            label.setAttribute('for', categSelection.getAttribute('id'));
+            label.textContent = data[i].name;
+            categsSelect.appendChild(categSelection);
+            categsSelect.appendChild(label);
+        }
+        
+    }
+    requestCateg.send();
+    // get ready to pack the post and send to the db
     var formData = new FormData();
-    var title = this.document.getElementById('postTitle');
-    var content = this.document.getElementById('postContent');
+    var title = document.getElementById('postTitle');
+    this.console.log(title.textContent);
+    var content = document.getElementById('postContent');
     var submitButton = document.getElementById('submitButton');
     var req = new XMLHttpRequest();
     submitButton.onclick = function(event)
@@ -29,8 +58,7 @@ window.onload = function()
         console.log(todayNum);
         formData.append('dateCreated', todayNum);
         formData.append('dateModified', todayNum);
-        formData.append('categId', '1');
-        formData.append('userID', '1');
+        formData.append('idusers', '1');
         // parse formData to json
         var formDataJSObject = new Object;
         for(var entry of formData.entries())
@@ -42,15 +70,40 @@ window.onload = function()
         console.log(formDataJSON);
         req.open('POST', 'http://localhost:8000/api/compose-post/', true);
         req.setRequestHeader('Content-Type', 'application/json');
-        req.onload = function()
+         // the id of the newly created post
+         var postID;
+        let promise = new Promise(function(resolve, reject)
         {
-            console.log('Request done');
-        };
-        req.onerror = function()
-        {
-            console.log('Error sending request');
-        };
-        req.send(formDataJSON);
+            req.onload = function()
+            {
+                console.log('Request done');
+                postID = JSON.parse(this.response)[0].insertId;
+                // post request send back an array, the first one contain insertId is the id of the post
+            };
+            req.onerror = function()
+            {
+                console.log('Error sending request');
+            };
+            req.send(formDataJSON);
+        });
+        // record the relationship between post and category
+        // var requestPostHasCateg = new XMLHttpRequest();
+        // requestPostHasCateg.open('POST', 'http://localhost:8000/api/compose-post/has-categ');
+        // requestPostHasCateg.setRequestHeader('Content-Type', 'application/json');
+        // var formDataPostsHasCateg = new FormData();
+        // var categSelected = document.querySelector('input[name="categ"]:checked')
+        // formDataPostsHasCateg.append('idposts', postID);
+        // formDataPostsHasCateg.append('posts_idusers', '1');
+        // formDataPostsHasCateg.append('idCategory',categSelected.value);
+        // requestPostHasCateg.onload = function()
+        // {
+        //     console.log('Recorded relationship between post and categ');
+        // }
+        // requestPostHasCateg.onerror = function()
+        // {
+        //     console.log('Error recording relationship');
+        // }
+        // requestPostHasCateg.send(JSON.stringify(formDataPostsHasCateg));
     }
     
 }

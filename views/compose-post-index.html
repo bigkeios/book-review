@@ -8,8 +8,23 @@
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/compose-post-main.css" />
     <script src="../scripts/post-send.js"></script>
+    <!-- <script src="../scripts/categs-load-on-composing-post.js"></script> -->
 </head>
 <body>
+    <div class="header">
+            <h1>A book-review blog</h1>
+            <div class="navbar">
+                <ul>
+                    <li><a href="./home-view-index.html">Home</a></li>
+                    <li><a href="./about-view.html">About</a></li>
+                    <li><a href="./log-in-view-index.html">Log in</a></li>
+                    <li><a href="./sign-up-view-index.html">Sign up</a></li>
+                    <li><a href="./compose-post-index.html"><button>Compose a post</button></a></li>
+                </ul>
+            </div>
+            <!-- end navbar -->
+        </div>
+        <!-- end header -->
     <div class="body">
         <h2 id="purpose-for-editor">Compose a look into a book</h2>
         <hr>
@@ -20,11 +35,32 @@
         <textarea id="postContent" placeholder="Enter the content of the post" rows="20" cols="150"></textarea>
         <small><p class="alert" id="contentAlert"></p></small>
         <h3> Category </h3>
+        <div id="categoriesSelect">
+        </div>
         <h3>Tags</h3>
         <input type="text" placeholder="Enter the tags for the post here, each are separate by a comma" id="postTag">
         <small><p class="alert" id="tagAlert"></p></small>
         <input type="submit" value="Send" id="submitButton">
         <input type="button" value="Cancel" id="discardPost">
     </div>
+    <footer>
+        <div class="footer">
+            <div class="row">
+                <div class="col-8 contact">
+                    <h3>Contact us</h3>
+                    <ul class="medias">
+                        <li>Facebook</li>
+                        <li>Email</li>
+                        <li>Phone</li>
+                    </ul>
+                </div>
+                <!-- end col-8 contact -->
+                <div class="col-4 quote">
+                    <q>"Good friend, good book, a sleepy conscience, that is an ideal life - Mark Twain"</q>
+                </div>
+                <!-- end col-4 quote -->
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
