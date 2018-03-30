@@ -1,6 +1,7 @@
 var connection = require('./connection');
 var bodyParser = require('body-parser');
-module.exports = {
+module.exports = 
+{
     listAllPosts: function(req, res)
     {
         // use promise to make sure the query is executed then the results will be returned

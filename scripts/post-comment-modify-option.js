@@ -11,7 +11,7 @@ window.onload = function()
     menuCmt.addEventListener('click', toggleMenu);
     function toggleMenu(e)
     {
-        // evt.target -> menuPost/menuCmt/anything call toggleMenu in its eventListener
+        // evt.target -> menuPost/menuCmt/anything that calls toggleMenu in its eventListener
         // we got clickedIcon bc we clicked on the icon and the id returned is from the icon
         var clickedIcon = document.getElementById(e.target.getAttribute('id'));
         var menu;

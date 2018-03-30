@@ -1,9 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var routes = require('./posts-router');
+var postsRouters = require('./posts-router');
+var categRouters = require('./categ-router');
 // start an express app
 var app = express();
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-routes(app, express);
+postsRouters(app, express);
+categRouters(app);
 app.listen(8000);

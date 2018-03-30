@@ -1,11 +1,10 @@
 window.onload = function()
 {
-    var readMore = document.getElementById('readMore');
-    var postID = document.getElementsByClassName('post').item(0).getAttribute('id');
-    readMore.addEventListener('click', loadAPost);
-    function loadAPost()
+    var readMore = document.getElementsByClassName('readMore');
+    for(var i = 0; i < readMore.length; ++i)
     {
-        window.location.href = 'post-view-index.html';
+        readMore.item(i).addEventListener('click', redirect);
+        console.log(readMore.item(i).getAttribute('id'));
     }
-    export {postID};
+    
 }

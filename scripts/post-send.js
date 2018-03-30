@@ -30,7 +30,7 @@ window.onload = function()
         formData.append('dateCreated', todayNum);
         formData.append('dateModified', todayNum);
         formData.append('categId', '1');
-        formData.append('user_id', '1');
+        formData.append('userID', '1');
         // parse formData to json
         var formDataJSObject = new Object;
         for(var entry of formData.entries())
@@ -40,7 +40,7 @@ window.onload = function()
         // send data in JSON string to the server
         var formDataJSON = JSON.stringify(formDataJSObject);
         console.log(formDataJSON);
-        req.open('POST', 'http://localhost:8000/compose-post/', true);
+        req.open('POST', 'http://localhost:8000/api/compose-post/', true);
         req.setRequestHeader('Content-Type', 'application/json');
         req.onload = function()
         {

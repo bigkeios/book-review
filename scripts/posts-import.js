@@ -13,7 +13,7 @@ function populatePost(jsonData)
         // creating div to store a post with its attributes
         var post = document.createElement('div');
         post.setAttribute('class', 'post');
-        post.setAttribute('id', jsonData[i].idposts + '');
+        post.setAttribute('id', jsonData[i].idposts+'');
         var postTitle = document.createElement('h3');
         var detail = document.createElement('h4');
         var postContent = document.createElement('p');
@@ -30,8 +30,9 @@ function populatePost(jsonData)
         // toDateString returns on date, not specific time
         detail.textContent = 'Posted on ' + dateCreated.toDateString();
         readMore.textContent = 'Read More...';
-        readMore.setAttribute('id', 'readMore');
-        readMore.setAttribute('href', './post-view-index.html');
+        readMore.setAttribute('class', 'readMore');
+        readMore.setAttribute('href', 'post-view-index/'+jsonData[i].idposts);
+        readMore.setAttribute('id', jsonData[i].idposts + '');
         //append the new elements into the document (posts div to be specific)
         // posts is obtained from getElementByClassName so it is a HTMLCollection -> access first elements through item()
         posts.item(0).appendChild(post);

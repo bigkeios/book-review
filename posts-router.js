@@ -22,9 +22,29 @@ module.exports = function(app, express)
         res.render('home-view-index.html');     
     });
     // each post route
-    app.get('/post-view-index.html', function(req, res)
+    app.get('/post-view-index/:post_id', function(req, res)
     {
         res.render('post-view-index.html');     
+    });
+    // about page route
+    app.get('/about-view.html', function(req, res)
+    {
+        res.render('about-view.html');     
+    });
+    // Log in page route
+    app.get('/log-in-view-index.html', function(req, res)
+    {
+        res.render('log-in-view-index.html');     
+    });
+    // Sign-up page route
+    app.get('/sign-up-view-index.html', function(req, res)
+    {
+        res.render('sign-up-view-index.html');     
+    });
+    // Composing post page route
+    app.get('/compose-post-index.html', function(req, res)
+    {
+        res.render('compose-post-index.html');     
     });
     // routes for APIs
     app.route('/api/posts').get(postsCtr.listAllPosts);
