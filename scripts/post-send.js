@@ -42,6 +42,7 @@ window.onload = function()
         formData.append('content', content.value);
         // add created date and modified date (=create date), creator and categ id
         var today = new Date();
+        // getDate return the day of the month, while getDay returns day of thw week
         var day = today.getDate();
         var month = today.getMonth()+1;
         var year = today.getFullYear();
@@ -54,10 +55,10 @@ window.onload = function()
         {
             month = '0' + month;
         }
-        var todayNum = year + month + day;
-        console.log(todayNum);
-        formData.append('dateCreated', todayNum);
-        formData.append('dateModified', todayNum);
+        var todayStr = year + month + day;
+        console.log(todayStr);
+        formData.append('dateCreated', todayStr);
+        formData.append('dateModified', todayStr);
         formData.append('idusers', '1');
         // parse formData to json
         var formDataJSObject = new Object;
