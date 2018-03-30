@@ -1,6 +1,6 @@
 var categs = document.getElementsByClassName('categs');
 var request = new XMLHttpRequest();
-request.open('GET', '../categs.json', true);
+request.open('GET', 'http://localhost:8000/api/categs', true);
 request.onload = function()
 {
     var data = JSON.parse(this.response);
@@ -15,7 +15,7 @@ function populateCateg(jsonData)
         // creating element to store a categ with its attributes
         var categName = document.createElement('li');
         //putting data into newly created elements
-        categName.textContent = jsonData[i].categName;
+        categName.textContent = jsonData[i].name;
         //append the new elements into the document (categs div to be specific)
         // categs is obtained from getElementByClassName so it is a HTMLCollection -> access first elements through item()
         categList.appendChild(categName);

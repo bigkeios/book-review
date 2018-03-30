@@ -9,14 +9,14 @@ module.exports =
         {
             connection.query('SELECT * FROM posts', function(err, rows, fields)
             {
-            if(err)
-            {
-                return reject(new Error('Error connecting'));
-            }
-            else
-            {
-                return resolve(rows);
-            }
+                if(err)
+                {
+                    return reject(new Error('Error connecting'));
+                }
+                else
+                {
+                    return resolve(rows);
+                }
             }); 
         });
         promise.then(function(msgSuccess)
