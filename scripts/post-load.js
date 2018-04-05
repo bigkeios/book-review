@@ -69,42 +69,53 @@ window.onload = function()
     requestCmt.send();
     // send comment
     var formDataCmt = new FormData();
+    var cmtSubmitButton = document.getElementById('commentSubmit');
     var commentContent = document.getElementById('commentContent');
-    var today = new Date();
-    // getDate returns the  day of the month while getDay returns the day of the week
-    var day = today.getDate();
-    // getMonth return 0 if it is January
-    var month = today.getMonth()+1;
-    var year = today.getFullYear();
-    // if the month or day 1-9, need to add 0 before,  
-    if(day < 10)
+    cmtSubmitButton.onclick = function()
     {
-        day = '0' + day;
-    }
-    if(month < 10)
-    {
-        month = '0' + month;
-    }
-    var todayStr = year+month+day;
-    // add data to the form data
-    formDataCmt.append('content', commentContent.value);
-    formDataCmt.append('dateCreated', todayStr);
-    formDataCmt.append('dateModified', todayStr);
-    formDataCmt.append('idusers', '1');
-    formDataCmt.append('idposts', postID);
-    formDataCmt.append('posts_idusers', '1');
-    // parse the form data
-    var formDataCmtJson = JSON.parse(formDataCmt);
-    // send the data of the comment
-    var requestSendCmt = new XMLHttpRequest();
-    requestSendCmt.open('POST', 'localhost:8000/api/send-comment');
-    requestSendCmt.send(formDataCmtJson);
-    requestSendCmt.onload = function()
-    {
-        console.log('Comment sent');
-    }
-    requestSendCmt.onerror = function()
-    {
-        console.log('Error sending the comment');
+        formDataCmt.append('content', commentContent.value);
+        var today = new Date();
+        // getDate returns the  day of the month while getDay returns the day of the week
+        var day = today.getDate();
+        // getMonth return 0 if it is January
+        var month = today.getMonth()+1;
+        var year = today.getFullYear();
+        // if the month or day 1-9, need to add 0 before,  
+        if(day < 10)
+        {
+            day = '0' + day;
+        }
+        if(month < 10)
+        {
+            month = '0' + month;
+        }
+        var todayStr = year+month+day;
+        // add data to the form data
+        formDataCmt.append('dateCreated', todayStr);
+        formDataCmt.append('dateModified', todayStr);
+        formDataCmt.append('idusers', '1');
+        formDataCmt.append('idposts', postID);
+        formDataCmt.append('posts_idusers', '1');
+        // parse the form data
+        var formDataCmtJsonObject = new Object;
+        for(var entry of formDataCmt.entries())
+        {
+            formDataCmtJsonObject[entry[0]] = entry[1];
+        }
+        var formDataCmtJsonString = JSON.stringify(formDataCmtJsonObject);
+        console.log(formDataCmtJsonString);
+        // send the data of the comment
+        var requestSendCmt = new XMLHttpRequest();
+        requestSendCmt.open('POST', 'http://localhost:8000/api/send-comment');
+        requestSendCmt.setRequestHeader('Content-Type','application/json');
+        requestSendCmt.send(formDataCmtJsonString);
+        requestSendCmt.onload = function()
+        {
+            console.log('Comment sent');
+        }
+        requestSendCmt.onerror = function()
+        {
+            console.log('Error sending the comment');
+        }
     }
 }

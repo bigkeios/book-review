@@ -1,6 +1,6 @@
 module.exports = function(app)
 {
-    var cmtCtr = require('./comment-ctr');
-    app.route('/api/comments/:post_id').get(cmtCtr.getCmtByPostId);
-    app.route('/api/send-comment/').post(cmtCtr.sendCmt);
+    var commentCtr = require('./comment-ctr');
+    app.route('/api/comments/:post_id').get(commentCtr.getCommentByPost);
+    app.route('/api/send-comment').post(commentCtr.sendComment);
 }

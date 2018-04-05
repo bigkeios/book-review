@@ -24,13 +24,11 @@ window.onload = function()
             categsSelect.appendChild(categSelection);
             categsSelect.appendChild(label);
         }
-        
     }
     requestCateg.send();
     // get ready to pack the post and send to the db
     var formData = new FormData();
     var title = document.getElementById('postTitle');
-    this.console.log(title.textContent);
     var content = document.getElementById('postContent');
     var submitButton = document.getElementById('submitButton');
     var req = new XMLHttpRequest();
@@ -62,6 +60,7 @@ window.onload = function()
         formData.append('idusers', '1');
         // parse formData to json
         var formDataJSObject = new Object;
+        // formData formed by entries which have a pair of key (the first one in the pair) and value (the latter one in the pair)
         for(var entry of formData.entries())
         {
             formDataJSObject[entry[0]] = entry[1];

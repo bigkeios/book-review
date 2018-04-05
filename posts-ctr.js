@@ -67,7 +67,7 @@ module.exports =
                 console.log(query.sql);
                if(err)
                {
-                   console('Error querying');
+                   console.log('Error querying');
                    return reject(new Error('Error querying'));
                } 
                else
@@ -90,12 +90,11 @@ module.exports =
         {
             req.app.use(bodyParser.json());
             var rela = req.body; 
-           var query = connection.query('INSERT INTO posts_has_category SET idposts = ?, posts_idusers = ?, idCategory = ?', [rela.idposts], [rela.posts_iduser], [rela.idCategory], function(err, rows, fields)
+           var query = connection.query('INSERT INTO posts_has_category SET idposts = ?, posts_idusers = ?, idCategory = ?', [rela.idposts, rela.posts_iduser, rela.idCategory], function(err, rows, fields)
             {
                 console.log(query.sql);
                if(err)
                {
-                   console('Error querying');
                    return reject(new Error('Error querying'));
                } 
                else

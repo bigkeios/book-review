@@ -1,54 +1,58 @@
 var connection = require('./connection');
+var bodyParser = require('body-parser');
 module.exports = 
 {
-    getCmtByPostId: function(req, res)
+    getCommentByPost: function(req, res)
     {
         let promise = new Promise(function(resolve, reject)
         {
-            connection.query('SELECT * FROM comment JOIN users WHERE idposts=? and comment.posts_idusers=users.idusers',[req.params.post_id], function(err, rows, fields)
+            var postID = [req.params.post_id];
+           connection.query('SELECT comment.content, users.name FROM comment NATURAL JOIN users WHERE comment.idposts = ?', [postID], function(err, rows, fields)
             {
+                console.log(this.sql);
                if(err)
                {
-                   return reject(new Error('Error connecting'));
+                    return reject(err);
                } 
                else
                {
-                   return resolve(rows);
+                    return resolve(rows);
                }
-            });
+            }); 
         });
         promise.then(function(msgSuccess)
         {
-            res.send(msgSuccess);
+           res.send(msgSuccess); 
         }, function(msgFail)
         {
             res.send(msgFail);
-        })
+        });
     },
-    sendCmt: function(req, res)
+    sendComment: function(req, res)
     {
         let promise = new Promise(function(resolve, reject)
         {
             req.app.use(bodyParser.json());
             var cmt = req.body;
-            connection.query('INSERT INTO comment SET content=?, dateCreated=?, dateModified=?, iduser=?, idposts=?, posts_idusers=?', [req.params.content], [req.params.dateCreated], [req.params.dateModified], [req.params.iduser], [req.params.idposts], [req.params.posts_idusers], function(err,rows, fields)
+            connection.query('INSERT INTO comment SET content = ?, dateCreated = ?, dateModified = ?, idusers = ?, idposts = ?, posts_idusers = ?', [cmt.content, cmt.dateCreated, cmt.dateModified, cmt.idusers, cmt.idposts, cmt.posts_idusers], function(err, rows, fields)
             {
+                console.log(this.sql);
                 if(err)
                 {
-                    return reject(new Error('Error querying'));
+                    return reject(err);
                 }
                 else
                 {
                     return resolve(cmt);
                 }
-            });
+            });  
         });
         promise.then(function(msgSuccess)
         {
-            res.send(msgSuccess);  
+           res.send(msgSuccess); 
         }, function(msgFail)
         {
-            res.send(msgFail); 
+           res.send(msgFail); 
         });
     }
 }

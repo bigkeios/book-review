@@ -5,7 +5,7 @@ var connection = mysql.createConnection(
         host: 'localhost',
         user: 'root',
         password: 'IchgsmPW8*',
-        database: 'bookReviewBlogDB',
+        database: 'bookreview_db',
         multipleStatements: true,
     }
 )
