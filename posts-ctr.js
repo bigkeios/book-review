@@ -81,32 +81,5 @@ module.exports =
         {
            res.send(msgFail);
         });
-    },
-    recordPostCategRela: function(req, res)
-    {       
-        let promise = new Promise(function(resolve, reject)
-        {
-            req.app.use(bodyParser.json());
-            var rela = req.body; 
-           var query = connection.query('INSERT INTO posts_has_category SET idposts = ?, posts_idusers = ?, idCategory = ?', [rela.idposts, rela.posts_iduser, rela.idCategory], function(err, rows, fields)
-            {
-                console.log(query.sql);
-               if(err)
-               {
-                   return reject(new Error('Error querying'));
-               } 
-               else
-               {
-                   return resolve(rela);
-               }
-            }); 
-        });
-        promise.then(function(msgSuccess)
-        {
-            res.send(msgSuccess);
-        }, function(msgFail)
-        {
-           res.send(msgFail);
-        });
     }
 }

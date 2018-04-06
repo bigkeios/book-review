@@ -54,5 +54,4 @@ module.exports = function(app, express)
     app.route('/api/posts').get(postsCtr.listAllPosts);
     app.route('/api/compose-post').post(postsCtr.sendPost);
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
-    app.route('/api/compose-post/has-categ').post(postsCtr.recordPostCategRela);
 }
