@@ -65,7 +65,7 @@ module.exports =
     {
         req.app.use(bodyParser.json());
         var hasTagInfo = req.body;
-        console.log(hasTagInfo);
+        console.log();
         connection.query('INSERT INTO posts_has_tag SET idposts = ?, posts_idusers = ?, idtag = ?', [hasTagInfo.idposts, hasTagInfo.posts_idusers, hasTagInfo.idtag], function(err, rows, fields)
         {
             console.log(this.sql);

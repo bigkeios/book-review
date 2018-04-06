@@ -151,6 +151,7 @@ window.onload = function()
                                 formDataHasTagObject[entry[0]] = entry[1];
                             }
                             var formDataHasTagJSON = JSON.stringify(formDataHasTagObject);
+                            // request to record the relationship between the tag and the post
                             var requestPostHasTag = new XMLHttpRequest();
                             requestPostHasTag.open('POST', 'http://localhost:8000/api/has-tag');
                             requestPostHasTag.setRequestHeader('Content-Type', 'application/json');
@@ -165,7 +166,7 @@ window.onload = function()
                             }
                         }
                     });
-                    // request to record the relationship between the tag and the post   
+                       
                 }
             }
         })
