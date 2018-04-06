@@ -35,17 +35,15 @@ module.exports =
             req.app.use(bodyParser.json());
             // if the body is not in the type specified, after option, head will not be returned
             var post = req.body;
-            var query = connection.query('INSERT INTO posts SET title = ?, content = ?, dateCreated = ?, dateModified = ?, idusers = ?; SELECT LAST_INSERT_ID()', [post.title, post.content, post.dateCreated, post.dateModified, post.idusers], function(err, rows, fields)
+            var query = connection.query('INSERT INTO posts SET title = ?, content = ?, dateCreated = ?, dateModified = ?, idusers = ?', [post.title, post.content, post.dateCreated, post.dateModified, post.idusers], function(err, rows, fields)
             {
                 console.log(query.sql);
                 if(err)
                 {   
-                    console.log('Error querying')
                     return reject(new Error('Error connecting'));
                 }
                 else
                 {
-                    console.log(rows);
                     return resolve(rows);
                 }
             });
@@ -72,7 +70,7 @@ module.exports =
                } 
                else
                {
-                   return resolve(rows);
+                   return resolve(rows.insertedID);
                }
             }); 
         });

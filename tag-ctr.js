@@ -26,30 +26,57 @@ module.exports =
             res.send(msgFail);  
         })
     },
-    createTag: function(req, res)
+    createNewTag: function(req, res)
     {
-        let promise = new Promise(function(resolve, reject)
+        req.app.use(bodyParser.json());
+        var tag = req.body;
+        connection.query('SELECT idtag, COUNT(*) as count FROM tag WHERE name = ?', [tag.name], function(err, rows, fields)
         {
-            req.app.use(bodyParser.json());
-            connection.query('INSERT INTO tag set name=?', [req.body.name], function(err, rows, fields)
+            if(err)
             {
-                console.log(this.sql);
-                if(err)
+                res.send(err);
+            }
+            else
+            {
+                // if the tag has not existed, create a new tag
+                if(rows[0].count == 0 )
                 {
-                    return reject(err);
+                    connection.query('INSERT INTO tag SET name=?',[tag.name], function(err, rows, fields)
+                    {
+                        console.log(this.sql);
+                        if(err)
+                        {
+                            res.send(err);
+                        }
+                        else
+                        {
+                            res.send(rows);
+                        }
+                    });
                 }
                 else
                 {
-                    return resolve(req.body);
+                    res.send(null);
                 }
-            });
+            }
         });
-        promise.then(function(msgSuccess)
+    },
+    saveRelaWPost: function(req, res)
+    {
+        req.app.use(bodyParser.json());
+        var hasTagInfo = req.body;
+        console.log(hasTagInfo);
+        connection.query('INSERT INTO posts_has_tag SET idposts = ?, posts_idusers = ?, idtag = ?', [hasTagInfo.idposts, hasTagInfo.posts_idusers, hasTagInfo.idtag], function(err, rows, fields)
         {
-            res.send(msgSuccess);
-        }, function(msgFail)
-        {
-            res.send(msgFail);
+            console.log(this.sql);
+           if(err)
+           {
+                res.send(err);
+           } 
+           else
+           {
+                res.send(hasTagInfo);
+           }
         });
     }
 }
