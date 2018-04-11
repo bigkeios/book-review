@@ -54,9 +54,10 @@ module.exports =
                         }
                     });
                 }
-                else
+                // else send back the id of the tag in the db
+                else if(rows[0].count > 0)
                 {
-                    res.send(null);
+                    res.send(rows[0]);
                 }
             }
         });

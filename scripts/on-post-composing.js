@@ -88,7 +88,7 @@ window.onload = function()
         promise.then(function(msgSuccess)
         {
             postID = msgSuccess;
-            //------------ send the new tags if there are any
+            //------------ create new tag if there are any and record the relationship between tags and the post
             // split the tags
             var tagsString = document.getElementById('postTag').value;
             // if there are tags specified, specify tags and send them
@@ -96,23 +96,12 @@ window.onload = function()
             {   
                 var tagsObject = [];
                 var tagsSplitted = tagsString.split(', ');
-                // create array of tag object to parse
+                // send the tags to the database to save new ones or know the id of which tag was specified 
                 for(tag of tagsSplitted)
                 {
                     var tagObject = new Object();
                     tagObject['name'] = tag;
-                    tagsObject.push(tagObject);
-                }
-                // parse the objects into json
-                var tagsJSON = [];
-                for(object of tagsObject)
-                {
-                    var tagJSON = JSON.stringify(object);
-                    tagsJSON.push(tagJSON);
-                }
-                // putting each of them into the db to save new tags
-                for(tag of tagsJSON)
-                {
+                    var tagJSON = JSON.stringify(tagObject);
                     // request to create new tag
                     // the request will send back the id of the newly created tag
                     var requestTag = new XMLHttpRequest();
@@ -123,9 +112,20 @@ window.onload = function()
                     {
                         requestTag.onload = function()
                         {
+                            // return the id of the newly created tag or the tag that was sent but has existed
                             if(this.response)
                             {
-                                resolve(JSON.parse(this.response).insertId);
+                                var response = JSON.parse(this.response);
+                                // if the response has insertId, a new tag was created
+                                if(response.insertId)
+                                {
+                                    resolve(response.insertId);
+                                }
+                                // if the response has idtag, a tag that has existed was found
+                                else if(response.idtag)
+                                {
+                                    resolve(response.idtag);
+                                }
                             }
                             console.log('Tag sent');
                         }
@@ -133,7 +133,7 @@ window.onload = function()
                         {
                             console.log('Error sending');
                         }
-                        requestTag.send(tag);
+                        requestTag.send(tagJSON);
                     });
                     promise.then(function(msgSuccess)
                     {
@@ -170,7 +170,6 @@ window.onload = function()
             }
             // ------------record the relationship between the post and categories
             var categsSelected = document.querySelectorAll('input[name="categ"]:checked');
-            console.log(categsSelected);
             for(categSelected of categsSelected)
             {
                 // pack data of each category to send
