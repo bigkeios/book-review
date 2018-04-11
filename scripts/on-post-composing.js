@@ -166,37 +166,37 @@ window.onload = function()
                             }
                         }
                     });
-                    // record the relationship between the post and categories
-                    var categsSelected = document.querySelectorAll('input[name="categ"]:checked');
-                    console.log(categsSelected);
-                    for(categSelected of categsSelected)
-                    {
-                        // pack data of each category to send
-                        var formDataPostsHasCateg = new FormData();
-                        formDataPostsHasCateg.append('idposts', postID);
-                        formDataPostsHasCateg.append('posts_idusers', '1');
-                        formDataPostsHasCateg.append('idCategory', categSelected.getAttribute('id'));
-                        var postHasCategObject = new Object();
-                        for(entry of formDataPostsHasCateg.entries())
-                        {
-                            postHasCategObject[entry[0]] = entry[1];
-                        }
-                        var postHasCategJson = JSON.stringify(postHasCategObject);
-                        // record the relationship between post and category
-                        var requestPostHasCateg = new XMLHttpRequest();
-                        requestPostHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
-                        requestPostHasCateg.setRequestHeader('Content-Type', 'application/json');
-                        requestPostHasCateg.onload = function()
-                        {
-                            console.log('Recorded relationship between post and categ');
-                        }
-                        requestPostHasCateg.onerror = function()
-                        {
-                            console.log('Error recording relationship');
-                        }
-                        requestPostHasCateg.send(postHasCategJson);
-                    }
                 }
+            }
+            // ------------record the relationship between the post and categories
+            var categsSelected = document.querySelectorAll('input[name="categ"]:checked');
+            console.log(categsSelected);
+            for(categSelected of categsSelected)
+            {
+                // pack data of each category to send
+                var formDataPostsHasCateg = new FormData();
+                formDataPostsHasCateg.append('idposts', postID);
+                formDataPostsHasCateg.append('posts_idusers', '1');
+                formDataPostsHasCateg.append('idCategory', categSelected.getAttribute('id'));
+                var postHasCategObject = new Object();
+                for(entry of formDataPostsHasCateg.entries())
+                {
+                    postHasCategObject[entry[0]] = entry[1];
+                }
+                var postHasCategJson = JSON.stringify(postHasCategObject);
+                // record the relationship between post and category
+                var requestPostHasCateg = new XMLHttpRequest();
+                requestPostHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
+                requestPostHasCateg.setRequestHeader('Content-Type', 'application/json');
+                requestPostHasCateg.onload = function()
+                {
+                    console.log('Recorded relationship between post and categ');
+                }
+                requestPostHasCateg.onerror = function()
+                {
+                    console.log('Error recording relationship');
+                }
+                requestPostHasCateg.send(postHasCategJson);
             }
         })
     }
