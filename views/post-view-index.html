@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/post-main.css" />
-    <script src="../scripts/post-comment-modify-option.js"></script>
+    <!-- <script src="../scripts/post-comment-modify-option.js"></script> -->
     <script src="../scripts/post-load.js"></script>
 </head>
 <body>
@@ -31,7 +31,7 @@
                 <div class="post">
                     <div class="modifyMenu">
                         <a href="#"><span><img class="menuSelect" id="menuSelectOnPost" src="../public/option.svg" height="15" width="15"></span></a>
-                        <ul id="menuOptionsOnPost" style="display:none">
+                        <ul class="menuOptions" id="menuOptionsOnPost" style="display:none">
                             <li><a class="editOption" id="editOptionOnPost">Edit</a></li>
                             <li><a href="#deleteOptionOnPost" class="deleteOption" id="deleteOptionOnPost" >Delete</a></li>
                         </ul>
@@ -70,8 +70,8 @@
             <div class="comments">
                 <div class="comment">
                     <div class="modifyMenu">
-                        <a href="#"><span><img class="menuSelect" id="menuSelectOnCmt"src="../public/option.svg" height="15" width="15"></span></a>
-                        <ul id="menuOptionsOnCmt" style="display:none">
+                        <a href="#menuOptionsOnCmt"><span><img class="menuSelect" id="menuSelectOnCmt"src="../public/option.svg" height="15" width="15"></span></a>
+                        <ul class="menuOptions" id="menuOptionsOnCmt" style="display:none">
                             <li><a class="editOption" id="editOptionOnCmt">Edit</a></li>
                             <li><a href="#deleteOptionOnCmt" class="deleteOption" id="deleteOptionOnCmt">Delete</a></li>
                         </ul>

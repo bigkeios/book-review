@@ -4,35 +4,32 @@ window.onload = function()
     var url = window.location.href;
     var urlSplitted = url.split('/')
     var postID = urlSplitted[4];
-    // load post
-    let promise = new Promise(function(resolve, reject)
+    //------------------- load post
+    var requestPost = new XMLHttpRequest();
+    // request.open('GET', '../static data/posts.json', true);
+    requestPost.open('GET', 'http://localhost:8000/api/posts/' + postID);
+    requestPost.onload = function () 
     {
-        var requestPost = new XMLHttpRequest();
-        // request.open('GET', '../static data/posts.json', true);
-        requestPost.open('GET', 'http://localhost:8000/api/posts/' + postID);
-        requestPost.onload = function () 
-        {
-            var jsonData = JSON.parse(this.response);
-            populatePost(jsonData[0]);
-        }
-        function populatePost(data)
-        {
-            post.item(0).setAttribute('id',data.idposts + '');
-            // elements in the post body
-            var postTitle = document.createElement('h3');
-            var detail = document.createElement('h4');
-            var postContent = document.createElement('p');
-            postTitle.textContent = data.title;
-            post.item(0).appendChild(postTitle);
-            var dateCreated = new Date(data.dateCreated);
-            detail.textContent = 'Posted on ' + dateCreated.toDateString();
-            post.item(0).appendChild(detail);
-            postContent.textContent = data.content;
-            post.item(0).appendChild(postContent);
-        }
-        requestPost.send();    
-    });
-    // load categories of the post
+        var jsonData = JSON.parse(this.response);
+        populatePost(jsonData[0]);
+    }
+    function populatePost(data)
+    {
+        post.item(0).setAttribute('id',data.idposts + '');
+        // elements in the post body
+        var postTitle = document.createElement('h3');
+        var detail = document.createElement('h4');
+        var postContent = document.createElement('p');
+        postTitle.textContent = data.title;
+        post.item(0).appendChild(postTitle);
+        var dateCreated = new Date(data.dateCreated);
+        detail.textContent = 'Posted on ' + dateCreated.toDateString();
+        post.item(0).appendChild(detail);
+        postContent.textContent = data.content;
+        post.item(0).appendChild(postContent);
+    }
+    requestPost.send();
+    //------------------- load categories of the post
     var requestCateg = new XMLHttpRequest();
     requestCateg.open('GET','http://localhost:8000/api/categs/'+postID);
     requestCateg.onload = function()
@@ -48,7 +45,7 @@ window.onload = function()
         post.item(0).appendChild(categsDetails);
     }
     requestCateg.send();
-    // load  comment of the post
+    //------------------- load  comment of the post
     var requestCmt = new XMLHttpRequest();
     requestCmt.open('GET', 'http://localhost:8000/api/comments/'+postID);
     requestCmt.onload = function()
@@ -67,7 +64,7 @@ window.onload = function()
         }        
     }
     requestCmt.send();
-    // send comment
+    //------------------- send comment
     var formDataCmt = new FormData();
     var cmtSubmitButton = document.getElementById('commentSubmit');
     var commentContent = document.getElementById('commentContent');
@@ -117,5 +114,68 @@ window.onload = function()
         {
             console.log('Error sending the comment');
         }
+    }
+    //------------------- toggle the menu edit/delete
+    // get the menu and icon to edit/delete post
+    var modifyMenu = document.getElementsByClassName('modifyMenu');
+    // get the one of the post div
+    var menuPost = modifyMenu.item(0);
+    // get the one of the comment div
+    var menuCmt = modifyMenu.item(1);
+    menuPost.addEventListener('click', toggleMenu);
+    menuCmt.addEventListener('click', toggleMenu);
+    function toggleMenu(e)
+    {
+        // evt.target -> menuPost/menuCmt/anything that calls toggleMenu in its eventListener
+        // we got clickedIcon bc we clicked on the icon and the id returned is from the icon
+        var clickedIcon = document.getElementById(e.target.getAttribute('id'));
+        var menu;
+        if(clickedIcon.getAttribute('id') === 'menuSelectOnPost')
+        {
+            menu = document.getElementById('menuOptionsOnPost');
+        }
+        else if(clickedIcon.getAttribute('id') === 'menuSelectOnCmt')
+        {
+            menu = document.getElementById('menuOptionsOnCmt');
+        }
+        try
+        {
+            // toggle the menu. this only works with inline style somehow
+            if(menu.style.display === 'none')
+            {
+                menu.style.display = 'block';
+            }
+            else if(menu.style.display === 'block')
+            {
+                menu.style.display = 'none';
+            }
+        }
+        catch(TypeError)
+        {
+            console.log("TypeError caught");
+        }
+    }
+    // confirmation window on clicking delete
+    // get delete option
+    var deleteOption = document.getElementsByClassName('deleteOption');
+    // get the delete option in the post div
+    deleteOption.item(0).addEventListener('click', alertDelete);
+    // get the delete option in the comment div
+    deleteOption.item(1).addEventListener('click', alertDelete);
+    function alertDelete(e)
+    {
+        // e plays the same role as in toggleMenu
+        // get the id of the option to know where it is from
+        var clickedOptionID = e.target.getAttribute('id');
+        var eleType;
+        if(clickedOptionID === 'deleteOptionOnPost')
+        {
+            eleType = 'post';
+        }
+        else if(clickedOptionID === 'deleteOptionOnCmt')
+        {
+            eleType = 'comment';
+        }
+        window.confirm('Are you sure you want to delete this ' + eleType);
     }
 }
