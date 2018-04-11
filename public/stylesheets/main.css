@@ -101,13 +101,17 @@ input[type=submit], input[type=button]
 /*---- Columns ----*/
 .col-8
 {
+    float: left;
     width: 57%;
     padding: 3%;
+    box-sizing: border-box;
 }
 .col-4
 {
+    float: right;
     width: 37%;
     padding: 3%;
+    box-sizing: border-box;
 }
 .col-5
 {

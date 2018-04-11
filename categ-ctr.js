@@ -6,7 +6,7 @@ module.exports =
     {
         let promise = new Promise(function(resolve, reject)
         {
-            connection.query('SELECT * FROM category', function(err, rows, fields)
+            connection.query('SELECT * FROM category ORDER BY name ASC', function(err, rows, fields)
             {
                 console.log(this.sql);
                 if(err)

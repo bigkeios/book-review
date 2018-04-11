@@ -70,7 +70,7 @@ module.exports =
                } 
                else
                {
-                   return resolve(rows.insertedID);
+                   return resolve(rows);
                }
             }); 
         });
