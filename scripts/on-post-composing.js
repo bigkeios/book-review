@@ -14,7 +14,7 @@ window.onload = function()
         for(var i = 0; i < data.length; ++i)
         {
             var categSelection = document.createElement('input');
-            categSelection.setAttribute('type', 'radio');
+            categSelection.setAttribute('type', 'checkbox');
             categSelection.setAttribute('id', data[i].idCategory);
             categSelection.setAttribute('value', data[i].name);
             categSelection.setAttribute('name', 'categ');
@@ -166,25 +166,36 @@ window.onload = function()
                             }
                         }
                     });
-                    // record the relationship between post and category
-                    var requestPostHasCateg = new XMLHttpRequest();
-                    requestPostHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
-                    requestPostHasCateg.setRequestHeader('Content-Type', 'application/json');
-                    // pack data to send
-                    var formDataPostsHasCateg = new FormData();
-                    var categSelected = document.querySelector('input[name="categ"]:checked')
-                    formDataPostsHasCateg.append('idposts', postID);
-                    formDataPostsHasCateg.append('posts_idusers', '1');
-                    formDataPostsHasCateg.append('idCategory', categSelected.getAttribute('id'));
-                    requestPostHasCateg.onload = function()
+                    // record the relationship between the post and categories
+                    var categsSelected = document.querySelectorAll('input[name="categ"]:checked');
+                    console.log(categsSelected);
+                    for(categSelected of categsSelected)
                     {
-                        console.log('Recorded relationship between post and categ');
+                        // pack data of each category to send
+                        var formDataPostsHasCateg = new FormData();
+                        formDataPostsHasCateg.append('idposts', postID);
+                        formDataPostsHasCateg.append('posts_idusers', '1');
+                        formDataPostsHasCateg.append('idCategory', categSelected.getAttribute('id'));
+                        var postHasCategObject = new Object();
+                        for(entry of formDataPostsHasCateg.entries())
+                        {
+                            postHasCategObject[entry[0]] = entry[1];
+                        }
+                        var postHasCategJson = JSON.stringify(postHasCategObject);
+                        // record the relationship between post and category
+                        var requestPostHasCateg = new XMLHttpRequest();
+                        requestPostHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
+                        requestPostHasCateg.setRequestHeader('Content-Type', 'application/json');
+                        requestPostHasCateg.onload = function()
+                        {
+                            console.log('Recorded relationship between post and categ');
+                        }
+                        requestPostHasCateg.onerror = function()
+                        {
+                            console.log('Error recording relationship');
+                        }
+                        requestPostHasCateg.send(postHasCategJson);
                     }
-                    requestPostHasCateg.onerror = function()
-                    {
-                        console.log('Error recording relationship');
-                    }
-                    requestPostHasCateg.send(JSON.stringify(formDataPostsHasCateg));  
                 }
             }
         })
