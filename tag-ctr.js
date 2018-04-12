@@ -79,5 +79,20 @@ module.exports =
                 res.send(hasTagInfo);
            }
         });
+    },
+    getTagByPost: function(req, res)
+    {
+        connection.query('SELECT tag.name FROM tag NATURAL JOIN posts_has_tag WHERE idposts=?',[req.params.post_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }

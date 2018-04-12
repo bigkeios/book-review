@@ -28,7 +28,7 @@ window.onload = function()
         postContent.textContent = data.content;
         post.item(0).appendChild(postContent);
     }
-    requestPost.send();
+    requestPost.send(); 
     //------------------- load categories of the post
     var requestCateg = new XMLHttpRequest();
     requestCateg.open('GET','http://localhost:8000/api/categs/'+postID);
@@ -37,13 +37,34 @@ window.onload = function()
         var categs = JSON.parse(this.response);
         var categsDetails = document.createElement('p');
         categsDetails.textContent = 'Categories: ';
-        for(var categ of categs)
+        if(categs)
         {
-            categsDetails.textContent += categ.name + '';
+            for(var categ of categs)
+            {
+                categsDetails.textContent += categ.name + ', ';
+            }
         }
         post.item(0).appendChild(categsDetails);
     }
     requestCateg.send();
+    //------------------- load tags of the post
+    var requestTag = new XMLHttpRequest();
+    requestTag.open('GET', 'http://localhost:8000/api/tags/'+postID);
+    requestTag.onload = function()
+    {
+        var tags = JSON.parse(this.response);
+        var tagsDetails = document.createElement('p');
+        tagsDetails.textContent = 'Tags: ';
+        if(tags)
+        {
+            for(var tag of tags)
+            {
+                tagsDetails.textContent += tag.name + ', ';
+            }
+        }
+        post.item(0).appendChild(tagsDetails);
+    }
+    requestTag.send();
     //------------------- load  comment of the post
     // load comments' content
     var requestCmt = new XMLHttpRequest();
@@ -178,7 +199,6 @@ window.onload = function()
         else if(regexMenuCmt.test(clickedIconID))
         {
             var idClickedSplitted = clickedIconID.split('#');
-            console.log(idClickedSplitted);
             menu = document.getElementById('menuOptionsOnCmt#'+idClickedSplitted[1]);
         }
         try
