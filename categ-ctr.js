@@ -79,5 +79,20 @@ module.exports =
         {
            res.send(msgFail);
         });
+    },
+    deleteRelaWPost: function(req, res)
+    {
+        connection.query('DELETE FROM posts_has_category WHERE idposts=?',[req.params.post_id],function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }

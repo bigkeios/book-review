@@ -108,7 +108,7 @@ window.onload = function()
             var deleteOptionLi = document.createElement('li');
             var deleteOptionA = document.createElement('a');
             deleteOptionA.setAttribute('class', 'deleteOption');
-            deleteOptionA.setAttribute('id', 'deleteOptionOnCmt');
+            deleteOptionA.setAttribute('id', 'deleteOptionOnCmt#'+cmt.idcomment);
             deleteOptionA.setAttribute('href','');
             deleteOptionA.addEventListener('click', alertDelete);
             deleteOptionA.textContent =  'Delete';
@@ -230,14 +230,49 @@ window.onload = function()
         // get the id of the option to know where it is from
         var clickedOptionID = e.target.getAttribute('id');
         var eleType;
+        var regexDeleteCmt = new RegExp('/deleteOptionOnCmt*/');
         if(clickedOptionID === 'deleteOptionOnPost')
         {
             eleType = 'post';
         }
-        else if(clickedOptionID === 'deleteOptionOnCmt')
+        else if(regexDeleteCmt.test(clickedOptionID))
         {
             eleType = 'comment';
         }
-        window.confirm('Are you sure you want to delete this ' + eleType);
+        var confirm = window.confirm('Are you sure you want to delete this ' + eleType);
+        if(confirm)
+        {
+            if(eleType === 'post')
+            {
+                // delete the relationship between the post and categs
+                var requestDelRelaCateg = new XMLHttpRequest();
+                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/delete-relation-with-categ/'+postID);
+                requestDelRelaCateg.onload = function()
+                {
+                    console.log('Relationship with categs being deleted');
+                }
+                requestDelRelaCateg.send();
+                // delete the relationship between the post and tags
+                var requestDelRelaTag = new XMLHttpRequest();
+                requestDelRelaTag.open('DELETE', 'http://localhost:8000/api/delete-relation-with-tag/'+postID);
+                requestDelRelaTag.onload = function()
+                {
+                    console.log('Relationship with tags being deleted');
+                }
+                requestDelRelaTag.send();
+                // delete the post
+                var requestDelPost = new XMLHttpRequest();
+                requestDelPost.open('DELETE', 'http://localhost:8000/api/delete-post/'+postID);
+                requestDelPost.onload = function()
+                {
+                    console.log('Post being delete');
+                }
+                requestDelPost.send();
+            }
+            else if(eleType === 'comment')
+            {
+
+            }
+        }
     }
 }

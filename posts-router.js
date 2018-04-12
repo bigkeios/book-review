@@ -6,7 +6,7 @@ module.exports = function(app, express)
     {
         // XHR request obeys the CORS, must add head so that the API will accept access from the web
         res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET, PUT, POST');
+        res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
@@ -54,4 +54,5 @@ module.exports = function(app, express)
     app.route('/api/posts').get(postsCtr.listAllPosts);
     app.route('/api/compose-post').post(postsCtr.sendPost);
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
+    app.route('/api/delete-post/:post_id').delete(postsCtr.deleteAPost);
 }

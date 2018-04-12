@@ -81,5 +81,20 @@ module.exports =
         {
            res.send(msgFail);
         });
+    },
+    deleteAPost: function(req, res)
+    {
+        connection.query('DELETE FROM posts WHERE idposts=?',[req.params.post_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }
