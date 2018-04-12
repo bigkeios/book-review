@@ -39,28 +39,69 @@ window.onload = function()
         categsDetails.textContent = 'Categories: ';
         for(var categ of categs)
         {
-            console.log(categ);
             categsDetails.textContent += categ.name + '';
         }
         post.item(0).appendChild(categsDetails);
     }
     requestCateg.send();
     //------------------- load  comment of the post
+    // load comments' content
     var requestCmt = new XMLHttpRequest();
     requestCmt.open('GET', 'http://localhost:8000/api/comments/'+postID);
     requestCmt.onload = function()
     {
         var cmts = JSON.parse(this.response);
-        var comment = document.getElementsByClassName('comment');
+        var comments = document.getElementsByClassName('comments');
         for(var cmt of cmts)
         {
+            // create div for a new comment
+            var comment = document.createElement('div');
+            comment.setAttribute('class', 'comment');
+            comments.item(0).appendChild(comment);
+            // create the edit/delete menu for the comment
+            var modifyMenu = document.createElement('div');
+            modifyMenu.setAttribute('class', 'modifyMenu');
+            modifyMenu.addEventListener('click', toggleMenu);
+            comment.appendChild(modifyMenu);
+            var modifyMenuLink = document.createElement('a');
+            modifyMenuLink.setAttribute('href', '#');
+            modifyMenu.appendChild(modifyMenuLink);
+            var modifyMenuLinkIcon = document.createElement('img');
+            modifyMenuLinkIcon.setAttribute('class','menuSelect');
+            modifyMenuLinkIcon.setAttribute('id','menuSelectOnCmt#'+cmt.idcomment);
+            modifyMenuLinkIcon.setAttribute('src','../public/option.svg');
+            modifyMenuLinkIcon.setAttribute('height','15');
+            modifyMenuLinkIcon.setAttribute('width','15');
+            modifyMenuLink.appendChild(modifyMenuLinkIcon);
+            var menuOptions = document.createElement('ul');
+            menuOptions.setAttribute('class', 'menuOptions');
+            menuOptions.setAttribute('id', 'menuOptionsOnCmt#'+cmt.idcomment);
+            menuOptions.setAttribute('style', 'display:none');
+            var editOptionLi = document.createElement('li');
+            var editOptionA = document.createElement('a');
+            editOptionA.setAttribute('class', 'editOption');
+            editOptionA.setAttribute('id', 'editOptionOnCmt');
+            editOptionA.textContent =  'Edit';
+            editOptionLi.appendChild(editOptionA);
+            menuOptions.appendChild(editOptionLi);
+            var deleteOptionLi = document.createElement('li');
+            var deleteOptionA = document.createElement('a');
+            deleteOptionA.setAttribute('class', 'deleteOption');
+            deleteOptionA.setAttribute('id', 'deleteOptionOnCmt');
+            deleteOptionA.setAttribute('href','');
+            deleteOptionA.addEventListener('click', alertDelete);
+            deleteOptionA.textContent =  'Delete';
+            deleteOptionLi.appendChild(deleteOptionA);
+            menuOptions.appendChild(deleteOptionLi);
+            modifyMenu.appendChild(menuOptions);
+            // putting the content of the comment in
             var username = document.createElement('h4');
             username.textContent = cmt.name;
-            comment.item(0).appendChild(username);
+            comment.appendChild(username);
             var cmtContent = document.createElement('p');
             cmtContent.textContent = cmt.content;
-            comment.item(0).appendChild(cmtContent);
-            comment.item(0).appendChild(document.createElement('br'));
+            comment.appendChild(cmtContent);
+            comment.appendChild(document.createElement('br'));
         }        
     }
     requestCmt.send();
@@ -120,23 +161,25 @@ window.onload = function()
     var modifyMenu = document.getElementsByClassName('modifyMenu');
     // get the one of the post div
     var menuPost = modifyMenu.item(0);
-    // get the one of the comment div
-    var menuCmt = modifyMenu.item(1);
     menuPost.addEventListener('click', toggleMenu);
-    menuCmt.addEventListener('click', toggleMenu);
+    // the one of the comment div was assigned the event listener
     function toggleMenu(e)
     {
         // evt.target -> menuPost/menuCmt/anything that calls toggleMenu in its eventListener
         // we got clickedIcon bc we clicked on the icon and the id returned is from the icon
-        var clickedIcon = document.getElementById(e.target.getAttribute('id'));
+        e.preventDefault();
+        var clickedIconID = e.target.getAttribute('id');
         var menu;
-        if(clickedIcon.getAttribute('id') === 'menuSelectOnPost')
+        var regexMenuCmt = new RegExp('menuSelectOnCmt*');
+        if(clickedIconID === 'menuSelectOnPost')
         {
             menu = document.getElementById('menuOptionsOnPost');
         }
-        else if(clickedIcon.getAttribute('id') === 'menuSelectOnCmt')
+        else if(regexMenuCmt.test(clickedIconID))
         {
-            menu = document.getElementById('menuOptionsOnCmt');
+            var idClickedSplitted = clickedIconID.split('#');
+            console.log(idClickedSplitted);
+            menu = document.getElementById('menuOptionsOnCmt#'+idClickedSplitted[1]);
         }
         try
         {
@@ -160,8 +203,7 @@ window.onload = function()
     var deleteOption = document.getElementsByClassName('deleteOption');
     // get the delete option in the post div
     deleteOption.item(0).addEventListener('click', alertDelete);
-    // get the delete option in the comment div
-    deleteOption.item(1).addEventListener('click', alertDelete);
+    // the delete option in the comment div was assigned the event listener
     function alertDelete(e)
     {
         // e plays the same role as in toggleMenu

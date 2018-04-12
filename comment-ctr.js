@@ -7,7 +7,7 @@ module.exports =
         let promise = new Promise(function(resolve, reject)
         {
             var postID = [req.params.post_id];
-           connection.query('SELECT comment.content, users.name FROM comment NATURAL JOIN users WHERE comment.idposts = ?', [postID], function(err, rows, fields)
+           connection.query('SELECT comment.idcomment, comment.content, users.name FROM comment NATURAL JOIN users WHERE comment.idposts = ?', [postID], function(err, rows, fields)
             {
                 console.log(this.sql);
                if(err)
