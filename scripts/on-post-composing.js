@@ -197,7 +197,9 @@ window.onload = function()
                 }
                 requestPostHasCateg.send(postHasCategJson);
             }
-        })
+            // redirect to the newly created post
+            window.location.assign('http://localhost:8000/post-view-index/'+postID);
+        });   
     }
     
 }

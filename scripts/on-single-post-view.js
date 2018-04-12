@@ -110,7 +110,7 @@ window.onload = function()
             deleteOptionA.setAttribute('class', 'deleteOption');
             deleteOptionA.setAttribute('id', 'deleteOptionOnCmt#'+cmt.idcomment);
             deleteOptionA.setAttribute('href','');
-            deleteOptionA.addEventListener('click', alertDelete);
+            deleteOptionA.addEventListener('click', chooseToDelete);
             deleteOptionA.textContent =  'Delete';
             deleteOptionLi.appendChild(deleteOptionA);
             menuOptions.appendChild(deleteOptionLi);
@@ -176,6 +176,8 @@ window.onload = function()
         {
             console.log('Error sending the comment');
         }
+        // reload to show new comment
+        window.location.reload(true);
     }
     //------------------- toggle the menu edit/delete
     // get the menu and icon to edit/delete post
@@ -222,9 +224,9 @@ window.onload = function()
     // get delete option
     var deleteOption = document.getElementsByClassName('deleteOption');
     // get the delete option in the post div
-    deleteOption.item(0).addEventListener('click', alertDelete);
+    deleteOption.item(0).addEventListener('click', chooseToDelete);
     // the delete option in the comment div was assigned the event listener
-    function alertDelete(e)
+    function chooseToDelete(e)
     {
         // e plays the same role as in toggleMenu
         // get the id of the option to know where it is from
@@ -268,6 +270,8 @@ window.onload = function()
                     console.log('Post being delete');
                 }
                 requestDelPost.send();
+                // redirect to home page
+                window.location.assign('http://localhost:8000/');
             }
             else if(eleType === 'comment')
             {
@@ -286,7 +290,10 @@ window.onload = function()
                    console.log('Comment being deleted');
                }
                requestDelComment.send(cmtDelInfoJSON);
+               // reload the page to display changes
+                window.location.reload(true);
             }
         }
+        
     }
 }
