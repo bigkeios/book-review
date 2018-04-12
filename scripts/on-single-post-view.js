@@ -230,7 +230,7 @@ window.onload = function()
         // get the id of the option to know where it is from
         var clickedOptionID = e.target.getAttribute('id');
         var eleType;
-        var regexDeleteCmt = new RegExp('/deleteOptionOnCmt*/');
+        var regexDeleteCmt = new RegExp('deleteOptionOnCmt*');
         if(clickedOptionID === 'deleteOptionOnPost')
         {
             eleType = 'post';
@@ -271,7 +271,21 @@ window.onload = function()
             }
             else if(eleType === 'comment')
             {
-
+                var idClickedSplitted = clickedOptionID.split('#');
+                var commentID = idClickedSplitted[1];
+                var requestDelComment = new XMLHttpRequest();
+               requestDelComment.open('DELETE', 'http://localhost:8000/api/delete-comment/'+commentID);
+               var cmtDelInfo = 
+                {
+                    idposts: postID
+                };
+                var cmtDelInfoJSON = JSON.stringify(cmtDelInfo);
+                requestDelComment.setRequestHeader('Content-Type', 'application/json');
+               requestDelComment.onload = function()
+               {
+                   console.log('Comment being deleted');
+               }
+               requestDelComment.send(cmtDelInfoJSON);
             }
         }
     }

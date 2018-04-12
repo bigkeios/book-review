@@ -54,5 +54,22 @@ module.exports =
         {
            res.send(msgFail); 
         });
+    },
+    deleteCommentsOfPost: function(req,res)
+    {
+        req.app.use(bodyParser.json());
+        console.log(req.body);
+        connection.query('DELETE FROM comment WHERE idposts=? and idcomment=?',[req.body.idposts, req.params.comment_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }
