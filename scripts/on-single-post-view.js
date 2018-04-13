@@ -249,16 +249,12 @@ window.onload = function()
             {
                 // delete the relationship between the post and categs
                 var requestDelRelaCateg = new XMLHttpRequest();
-                var relaWCategDelData = 
-                {
-                    idposts: postID
-                }
-                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/has-categ/');
+                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/has-categ/'+postID);
                 requestDelRelaCateg.onload = function()
                 {
                     console.log('Relationship with categs being deleted');
                 }
-                requestDelRelaCateg.send(JSON.stringify(relaWCategDelData));
+                requestDelRelaCateg.send();
                 // delete the relationship between the post and tags
                 var requestDelRelaTag = new XMLHttpRequest();
                 requestDelRelaTag.open('DELETE', 'http://localhost:8000/api/delete-relation-with-tag/'+postID);
