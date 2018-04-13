@@ -82,7 +82,8 @@ module.exports =
     },
     deleteRelaWPost: function(req, res)
     {
-        connection.query('DELETE FROM posts_has_category WHERE idposts=?',[req.params.post_id],function(err, rows, fields)
+        req.app.use(bodyParser.json());
+        connection.query('DELETE FROM posts_has_category WHERE idposts=?',[req.body.idposts],function(err, rows, fields)
         {
             console.log(this.sql);
             if(err)
@@ -94,5 +95,9 @@ module.exports =
                 res.send(rows);
             }
         });
+    },
+    updateRelaWPost: function(req, res)
+    {
+        
     }
 }

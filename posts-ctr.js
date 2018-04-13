@@ -96,5 +96,9 @@ module.exports =
                 res.send(rows);
             }
         });
+    },
+    updatePost: function(req,res)
+    {
+        
     }
 }

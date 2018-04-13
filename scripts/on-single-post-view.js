@@ -101,7 +101,9 @@ window.onload = function()
             var editOptionLi = document.createElement('li');
             var editOptionA = document.createElement('a');
             editOptionA.setAttribute('class', 'editOption');
-            editOptionA.setAttribute('id', 'editOptionOnCmt');
+            editOptionA.setAttribute('id', 'editOptionOnCmt#'+cmt.idcomment);
+            editOptionA.setAttribute('href', '');
+            editOptionA.addEventListener('click', chooseToEdit);
             editOptionA.textContent =  'Edit';
             editOptionLi.appendChild(editOptionA);
             menuOptions.appendChild(editOptionLi);
@@ -220,8 +222,7 @@ window.onload = function()
             console.log("TypeError caught");
         }
     }
-    // confirmation window on clicking delete
-    // get delete option
+    // Delete option
     var deleteOption = document.getElementsByClassName('deleteOption');
     // get the delete option in the post div
     deleteOption.item(0).addEventListener('click', chooseToDelete);
@@ -248,12 +249,16 @@ window.onload = function()
             {
                 // delete the relationship between the post and categs
                 var requestDelRelaCateg = new XMLHttpRequest();
-                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/delete-relation-with-categ/'+postID);
+                var relaWCategDelData = 
+                {
+                    idposts: postID
+                }
+                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/has-categ/');
                 requestDelRelaCateg.onload = function()
                 {
                     console.log('Relationship with categs being deleted');
                 }
-                requestDelRelaCateg.send();
+                requestDelRelaCateg.send(JSON.stringify(relaWCategDelData));
                 // delete the relationship between the post and tags
                 var requestDelRelaTag = new XMLHttpRequest();
                 requestDelRelaTag.open('DELETE', 'http://localhost:8000/api/delete-relation-with-tag/'+postID);
@@ -264,7 +269,7 @@ window.onload = function()
                 requestDelRelaTag.send();
                 // delete the post
                 var requestDelPost = new XMLHttpRequest();
-                requestDelPost.open('DELETE', 'http://localhost:8000/api/delete-post/'+postID);
+                requestDelPost.open('DELETE', 'http://localhost:8000/api/posts/'+postID);
                 requestDelPost.onload = function()
                 {
                     console.log('Post being delete');
@@ -294,6 +299,22 @@ window.onload = function()
                 window.location.reload(true);
             }
         }
-        
+    }
+    // Edit option
+    var editOption = document.getElementsByClassName('editOption');
+    // get the option on post
+    editOption.item(0).addEventListener('click', chooseToEdit);
+    function chooseToEdit(e)
+    {
+        var clickedOptionID = e.target.getAttribute('id');
+        var regexEditCmt = new RegExp('editOptionOnCmt*');
+        if(clickedOptionID === 'editOptionOnPost')
+        {
+            window.location.assign('http://localhost:8000/edit-post-index/'+postID);
+        }
+        else if(regexEditCmt.test(clickedOptionID))
+        {
+
+        }
     }
 }

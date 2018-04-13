@@ -6,7 +6,7 @@ module.exports = function(app, express)
     {
         // XHR request obeys the CORS, must add head so that the API will accept access from the web
         res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+        res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, PATCH');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
@@ -50,9 +50,15 @@ module.exports = function(app, express)
     {
         res.render('compose-post-index.html');     
     });
+    // Edit post page route
+    app.get('/edit-post-index/:post_id', function(req, res)
+    {
+        res.render('edit-post-index.html');
+    });
     // routes for APIs
     app.route('/api/posts').get(postsCtr.listAllPosts);
-    app.route('/api/compose-post').post(postsCtr.sendPost);
+    app.route('/api/posts').post(postsCtr.sendPost);
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
-    app.route('/api/delete-post/:post_id').delete(postsCtr.deleteAPost);
+    app.route('/api/posts/:post_id').delete(postsCtr.deleteAPost);
+    app.route('/api/posts/:post_id').patch(postsCtr.updatePost);
 }

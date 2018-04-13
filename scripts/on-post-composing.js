@@ -68,7 +68,7 @@ window.onload = function()
         }
         // send data in JSON string to the server
         var formDataJSON = JSON.stringify(formDataObject);
-        req.open('POST', 'http://localhost:8000/api/compose-post/', true);
+        req.open('POST', 'http://localhost:8000/api/posts/', true);
         req.setRequestHeader('Content-Type', 'application/json');
          // the id of the newly created post
          var postID;
