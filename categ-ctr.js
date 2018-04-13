@@ -97,6 +97,19 @@ module.exports =
     },
     deleteARela: function(req,res)
     {
-
+        req.app.use(bodyParser.json());
+        var relation = req.body;
+        connection.query('DELETE FROM posts_has_category WHERE idCategory=? AND idposts=?', [relation.idCategory, relation.idposts], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err)
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }
