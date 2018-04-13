@@ -38,9 +38,10 @@ window.onload = function()
     // load the title and content of the post
     var requestPost = new XMLHttpRequest();
     requestPost.open('GET', 'http://localhost:8000/api/posts/'+postID);
+    var post;
     requestPost.onload = function()
     {
-        var post = JSON.parse(this.response);
+        post = JSON.parse(this.response)
         title.value = post[0].title;
         content.value = post[0].content;
     }
@@ -48,9 +49,10 @@ window.onload = function()
     // load the categories of the post
     var requestCategs = new XMLHttpRequest();
     requestCategs.open('GET', 'http://localhost:8000/api/categs/'+postID);
+    var categs;
     requestCategs.onload = function()
     {
-        var categs = JSON.parse(this.response);
+        categs = JSON.parse(this.response);
         for(categ of categs)
         {
             for(child of categsSelect.children)
@@ -68,9 +70,10 @@ window.onload = function()
     // load the tags of the post
     var requestTags = new XMLHttpRequest();
     requestTags.open('GET', 'http://localhost:8000/api/tags/'+postID);
+    var tags;
     requestTags.onload = function()
     {
-        var tags = JSON.parse(this.response);
+        tags = JSON.parse(this.response);
         for(tag of tags)
         {
             tagsField.value += tag.name + ', ';
@@ -85,16 +88,17 @@ window.onload = function()
     title.addEventListener('change', catchDataChange);
     content.addEventListener('change', catchDataChange);
     tagsField.addEventListener('change', catchDataChange);
-    catchDataChange = function(e)
+    var patches=[];
+    function catchDataChange(e)
     {
         var fieldChangedID = e.target.getAttribute('id');
         if(fieldChangedID === 'postTitle')
         {
-            postChanges['title'] = title.value;
+            patches.push({op: "replace", path: "/title", value:title.value});
         }
         else if (fieldChangedID === 'postContent')
         {
-            postChanges['content'] = content.value;
+            patches.push({op: "replace", path: "/content", value:content.value});
         }
         else if(fieldChangedID === 'postTag')
         {
@@ -108,76 +112,38 @@ window.onload = function()
                 hasCategChanges['idposts'] = postID;
             }
         }
-        // add modified date
-        var today = new Date();
-        // getDate return the day of the month, while getDay returns day of thw week
-        var day = today.getDate();
-        var month = today.getMonth()+1;
-        var year = today.getFullYear();
-        // if day and month 1-9, need to add a zero
-        if(day < 10)
-        {
-            day = '0' + day;
-        }
-        if(month < 10)
-        {
-            month = '0' + month;
-        }
-        var todayStr = year + month + day;
-        postChanges['dateModified'] = todayStr;
     }
+    // add modified date for patch of post's changes
+    var today = new Date();
+    // getDate return the day of the month, while getDay returns day of thw week
+    var day = today.getDate();
+    var month = today.getMonth()+1;
+    var year = today.getFullYear();
+    // if day and month 1-9, need to add a zero
+    if(day < 10)
+    {
+        day = '0' + day;
+    }
+    if(month < 10)
+    {
+        month = '0' + month;
+    }
+    var todayStr = year + month + day;
+    patches.push({op: "replace", path: "/dateModified", value:todayStr});
     // send the changes
     var submitButton = document.getElementById('submitButton');
     submitButton.onclick = function(e)
     {
         // submit post changes
+        // parse patches into json
+        patches = JSON.stringify(patches);
         var requestPostChanges = new XMLHttpRequest();
         requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
-        requestPostChanges.send(JSON.stringify(postChanges));
+        requestPostChanges.setRequestHeader('Content-Type', 'application/json');
+        requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
+        requestPostChanges.send(patches);
         // submit changes in relationship with category
-        var requestCategsChanges = new XMLHttpRequest();
-        requestCategsChanges.open('PATCH', 'http://localhost:8000/api/has-categ');
-    }
-   
-    var formData = new FormData();
-    
-    var req = new XMLHttpRequest();
-    // pack the post and (new) tags and send it to the db
-    submitButton.onclick = function(e)
-    {
-        e.preventDefault();
-        // get all the elements in the form that change
-        formData.append('title', title.value);
-        formData.append('content', content.value);
-        
-        formData.append('dateCreated', todayStr);
-        formData.append('dateModified', todayStr);
-        formData.append('idusers', '1');
-        // parse formData to json
-        var formDataObject = new Object;
-        // formData formed by entries which have a pair of key (the first one in the pair) and value (the latter one in the pair)
-        for(var entry of formData.entries())
-        {
-            formDataObject[entry[0]] = entry[1];
-        }
-        // send data in JSON string to the server
-        var formDataJSON = JSON.stringify(formDataObject);
-        req.open('POST', 'http://localhost:8000/api/compose-post/', true);
-        req.setRequestHeader('Content-Type', 'application/json');
-         // the id of the newly created post
-         var postID;
-        let promise = new Promise(function(resolve, reject)
-        {
-            req.onload = function()
-            {
-                console.log('Request done');
-                resolve(JSON.parse(this.response).insertId);
-            };
-            req.onerror = function()
-            {
-                console.log('Error sending request');
-            };
-            req.send(formDataJSON);
-        });
+        // var requestCategsChanges = new XMLHttpRequest();
+        // requestCategsChanges.open('PATCH', 'http://localhost:8000/api/has-categ');
     }
 }

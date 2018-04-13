@@ -1,5 +1,6 @@
 var connection = require('./connection');
 var bodyParser = require('body-parser');
+var jsonPatch = require('jsonpatch');
 module.exports = 
 {
     listAllPosts: function(req, res)
@@ -99,6 +100,31 @@ module.exports =
     },
     updatePost: function(req,res)
     {
-        
+        req.app.use(bodyParser.json());
+        var patches = req.body;
+        connection.query('SELECT * FROM posts WHERE idposts = ?', [req.params.post_id], function(err, rows, fields)
+        {
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                var patchedPost = rows[0];
+                patchedPost = jsonPatch.apply_patch(patchedPost, patches);
+                connection.query('UPDATE posts SET title=?, content=?, dateCreated=?, dateModified=? WHERE idposts=?', [patchedPost.title, patchedPost.content, patchedPost.dateCreated, patchedPost.dateModified, patchedPost.idposts], function(err, rows, fields)
+                {
+                    console.log(this.sql);
+                    if(err)
+                    {
+                        res.send(err);
+                    }
+                    else
+                    {
+                        res.send(rows);
+                    }
+                });
+            }
+        });
     }
-}
+}   
