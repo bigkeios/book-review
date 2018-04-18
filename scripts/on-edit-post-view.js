@@ -1,3 +1,5 @@
+import { resolve } from "url";
+
 window.onload = function()
 {
     // get the ID of the post
@@ -23,6 +25,7 @@ window.onload = function()
             categSelection.setAttribute('id', data[i].idCategory);
             categSelection.setAttribute('value', data[i].name);
             categSelection.setAttribute('name', 'categ');
+            categSelection.addEventListener('change', catchDataChange);
             var label = document.createElement('label');
             label.setAttribute('for', categSelection.getAttribute('id'));
             label.textContent = data[i].name;
@@ -46,7 +49,7 @@ window.onload = function()
         content.value = post[0].content;
     }
     requestPost.send();
-    // load the categories of the post
+    // load categories selection of the post
     var requestCategs = new XMLHttpRequest();
     requestCategs.open('GET', 'http://localhost:8000/api/categs/'+postID);
     var categs;
@@ -61,8 +64,6 @@ window.onload = function()
                 {
                     child.setAttribute('checked', 'true');
                 }
-                // assign event listener to each of categs
-                child.addEventListener('change', catchDataChange);
             }
         }
     }
@@ -112,7 +113,6 @@ window.onload = function()
             // if it is newly checked, this is a new relationship -> post request for rela 
             if(document.getElementById(fieldChangedID).checked == true)
             {
-                console.log(fieldChangedID);
                 var hasCategAdd = 
                 {
                     idCategory: fieldChangedID,
@@ -124,7 +124,6 @@ window.onload = function()
             // if is unchecked, an existed relationship disappeared -> delete request for rela
             else if(document.getElementById(fieldChangedID).checked == false)
             {
-                console.log(fieldChangedID);
                 var hasCategDel =
                 {
                     idCategory: fieldChangedID,
@@ -134,68 +133,76 @@ window.onload = function()
             }
         }
     }
-    // add modified date for patch of post's changes
-    var today = new Date();
-    // getDate return the day of the month, while getDay returns day of thw week
-    var day = today.getDate();
-    var month = today.getMonth()+1;
-    var year = today.getFullYear();
-    // if day and month 1-9, need to add a zero
-    if(day < 10)
-    {
-        day = '0' + day;
-    }
-    if(month < 10)
-    {
-        month = '0' + month;
-    }
-    var todayStr = year + month + day;
-    patchesPost.push({op: "replace", path: "/dateModified", value:todayStr});
     // send the changes
     var submitButton = document.getElementById('submitButton');
     submitButton.onclick = function(e)
     {
-        // submit post changes
-        // parse patches into json
-        if(patchesPost)
+        let promise = new Promise(function(resolve, reject)
         {
-            patchesPost = JSON.stringify(patchesPost);
-            var requestPostChanges = new XMLHttpRequest();
-            requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
-            requestPostChanges.setRequestHeader('Content-Type', 'application/json');
-            requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
-            requestPostChanges.send(patchesPost);
-        }
-        // submit changes in relationship with category
-        if(hasCategAdds)
-        {
-            for(hasCategAdd of hasCategAdds)
+            if(patchesPost)
             {
-                var requestAddHasCateg = new XMLHttpRequest();
-                requestAddHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
-                requestAddHasCateg.setRequestHeader('Content-Type', 'application/json');
-                requestAddHasCateg.onload = function()
+                // add modified date for patch of post's changes
+                var today = new Date();
+                // getDate return the day of the month, while getDay returns day of thw week
+                var day = today.getDate();
+                var month = today.getMonth()+1;
+                var year = today.getFullYear();
+                // if day and month 1-9, need to add a zero
+                if(day < 10)
                 {
-                    console.log('New rela being sent');
+                    day = '0' + day;
                 }
-                console.log(hasCategAdd);
-                requestAddHasCateg.send(JSON.stringify(hasCategAdd));
+                if(month < 10)
+                {
+                    month = '0' + month;
+                }
+                var todayStr = year + month + day;
+                patchesPost.push({op: "replace", path: "/dateModified", value:todayStr});
+                // submit post changes
+                // parse patches into json
+                patchesPost = JSON.stringify(patchesPost);
+                var requestPostChanges = new XMLHttpRequest();
+                requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
+                requestPostChanges.setRequestHeader('Content-Type', 'application/json');
+                requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
+                requestPostChanges.send(patchesPost);
+                requestPostChanges.onloadend = function()
+                {
+                    patchesPost = null;
+                }
             }
-        }
-        if(hasCategDels)
-        {
-            for(hasCategDel of hasCategDels)
+            // submit changes in relationship with category
+            if(hasCategAdds)
             {
-                var requestDelHasCateg = new XMLHttpRequest();
-                requestDelHasCateg.open('DELETE', 'http://localhost:8000/api/has-categ');
-                requestDelHasCateg.setRequestHeader('Content-Type', 'application/json');
-                requestDelHasCateg.onload = function()
+                for(hasCategAdd of hasCategAdds)
                 {
-                    console.log('A rela being deleted');
+                    var requestAddHasCateg = new XMLHttpRequest();
+                    requestAddHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
+                    requestAddHasCateg.setRequestHeader('Content-Type', 'application/json');
+                    requestAddHasCateg.onload = function()
+                    {
+                        console.log('New rela being sent');
+                    }
+                    console.log(hasCategAdd);
+                    requestAddHasCateg.send(JSON.stringify(hasCategAdd));
                 }
-                console.log(hasCategDel);
-                requestDelHasCateg.send(JSON.stringify(hasCategDel));
             }
-        }
+            if(hasCategDels)
+            {
+                for(hasCategDel of hasCategDels)
+                {
+                    var requestDelHasCateg = new XMLHttpRequest();
+                    requestDelHasCateg.open('DELETE', 'http://localhost:8000/api/has-categ');
+                    requestDelHasCateg.setRequestHeader('Content-Type', 'application/json');
+                    requestDelHasCateg.onload = function()
+                    {
+                        console.log('A rela being deleted');
+                    }
+                    console.log(hasCategDel);
+                    requestDelHasCateg.send(JSON.stringify(hasCategDel));
+                }
+            }
+        });
+        
     }
 }
