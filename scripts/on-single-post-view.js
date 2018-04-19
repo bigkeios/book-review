@@ -226,7 +226,7 @@ window.onload = function()
     var deleteOption = document.getElementsByClassName('deleteOption');
     // get the delete option in the post div
     deleteOption.item(0).addEventListener('click', chooseToDelete);
-    // the delete option in the comment div was assigned the event listener
+    // the delete option in the comment div was assigned the event listener when the comments are load
     function chooseToDelete(e)
     {
         // e plays the same role as in toggleMenu

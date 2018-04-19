@@ -299,59 +299,67 @@ window.onload = function()
             // send the diff tags to save new one if necessary and get its id to record rela
             if(diffTags)
             {
-                for(tag of diffTags)
+                promiseHasTagAdd = new Promise(function(resolve, reject)
                 {
-                    var tagObject = 
+                    for(tag of diffTags)
                     {
-                        name: tag
-                    };
-                    var diffTagID;
-                    let promise = new Promise(function(resolve, reject)
-                    {
-                        var requestDiffTag = new XMLHttpRequest();
-                        requestDiffTag.open('POST', 'http://localhost:8000/api/tags');
-                        requestDiffTag.setRequestHeader('Content-Type', 'application/json');
-                        requestDiffTag.send(JSON.stringify(tagObject));
-                        requestDiffTag.onload = function()
+                        var tagObject = 
                         {
-                            var response = JSON.parse(this.response);
-                            // if the response has idtag, get the id of tag existed returned
-                            if(response.idtag)
-                            {
-                                resolve(response.idtag);
-                            }
-                            // if the response has insertId, get the id of tag newly created from result of inserting returned
-                            else if(response.insertId)
-                            {
-                                resolve(response.insertId);
-                            }
-                        }
-                    });
-                    // save rela
-                    promiseHasTagAdd = promise.then(function(msgSuccess)
-                    {
-                        diffTagID = msgSuccess;
-                        var hasTag = 
-                        {
-                            idposts: postID,
-                            posts_idusers: 1,
-                            idtag: diffTagID
+                            name: tag
                         };
-                        var requestHasTagAdd = new XMLHttpRequest();
-                        requestHasTagAdd.open('POST', 'http://localhost:8000/api/has-tag');
-                        requestHasTagAdd.setRequestHeader('Content-Type', 'application/json');
-                        requestHasTagAdd.send(JSON.stringify(hasTag));
-                        requestHasTagAdd.onload = function()
+                        var diffTagID;
+                        let promise = new Promise(function(resolve, reject)
                         {
-                            console.log('New tags are being recorded');
-                            if(requestHasTagAdd.status != 200)
+                            var requestDiffTag = new XMLHttpRequest();
+                            requestDiffTag.open('POST', 'http://localhost:8000/api/tags');
+                            requestDiffTag.setRequestHeader('Content-Type', 'application/json');
+                            requestDiffTag.send(JSON.stringify(tagObject));
+                            requestDiffTag.onload = function()
+                            {
+                                var response = JSON.parse(this.response);
+                                // if the response has idtag, get the id of tag existed returned
+                                if(response.idtag)
+                                {
+                                    resolve(response.idtag);
+                                }
+                                // if the response has insertId, get the id of tag newly created from result of inserting returned
+                                else if(response.insertId)
+                                {
+                                    resolve(response.insertId);
+                                }
+                            }
+                        });
+                        // save rela
+                        promise.then(function(msgSuccess)
+                        {
+                            diffTagID = msgSuccess;
+                            var hasTag = 
+                            {
+                                idposts: postID,
+                                posts_idusers: 1,
+                                idtag: diffTagID
+                            };
+                            var requestHasTagAdd = new XMLHttpRequest();
+                            requestHasTagAdd.open('POST', 'http://localhost:8000/api/has-tag');
+                            requestHasTagAdd.setRequestHeader('Content-Type', 'application/json');
+                            requestHasTagAdd.send(JSON.stringify(hasTag));
+                            requestHasTagAdd.onload = function()
+                            {
+                                console.log('New tags are being recorded');
+                                if(requestHasTagAdd.status != 200)
+                                {
+                                    reject();
+                                }
+                            }
+                            requestHasTagAdd.onerror = function()
                             {
                                 reject();
                             }
-                            resolve();
-                        }
-                    });
-                }
+                        });
+                    }
+                    resolve();
+                });
+                
             }
             // delete the relationship with old tags
             if(discardedTags)
