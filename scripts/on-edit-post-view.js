@@ -194,11 +194,13 @@ window.onload = function()
     var submitButton = document.getElementById('submitButton');
     submitButton.onclick = function(e)
     {
+        var promisePost;
+        var promiseHasCategAdd;
+        var promiseHasCategDel;
+        var promiseHasTagAdd;
+        var promiseHasTagDel;
         if(patchesPost)
         {
-            var okPost;
-            var okHasCateg;
-            var okHasTag;
             // add modified date for patch of post's changes
             var today = new Date();
             // getDate return the day of the month, while getDay returns day of thw week
@@ -219,48 +221,82 @@ window.onload = function()
             // submit post changes
             // parse patches into json
             patchesPost = JSON.stringify(patchesPost);
-            var requestPostChanges = new XMLHttpRequest();
-            requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
-            requestPostChanges.setRequestHeader('Content-Type', 'application/json');
-            requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
-            requestPostChanges.send(patchesPost);
-            requestPostChanges.onloadend = function()
+            let promisePost = new Promise(function(resolve, reject)
             {
-                patchesPost = null;
-                okPost = true;
-            }
+                var requestPostChanges = new XMLHttpRequest();
+                requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
+                requestPostChanges.setRequestHeader('Content-Type', 'application/json');
+                requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
+                requestPostChanges.send(patchesPost);
+                requestPostChanges.onload = function()
+                {
+                    patchesPost = null;
+                    if(requestPostChanges.status != 200)
+                    {
+                        reject();
+                    }
+                    resolve();
+                }
+                requestPostChanges.onerror = function()
+                {
+                    reject();
+                }
+            });
             // submit changes in relationship with category
             if(hasCategAdds)
             {
-                for(hasCategAdd of hasCategAdds)
+                let promiseHasCategAdd = new Promise(function(resolve, reject)
                 {
-                    var requestAddHasCateg = new XMLHttpRequest();
-                    requestAddHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
-                    requestAddHasCateg.setRequestHeader('Content-Type', 'application/json');
-                    requestAddHasCateg.onload = function()
+                    for(hasCategAdd of hasCategAdds)
                     {
-                        console.log('New rela being sent');
+                        var requestAddHasCateg = new XMLHttpRequest();
+                        requestAddHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
+                        requestAddHasCateg.setRequestHeader('Content-Type', 'application/json');
+                        requestAddHasCateg.send(JSON.stringify(hasCategAdd));
+                        requestAddHasCateg.onload = function()
+                        {
+                            console.log('New rela being sent');
+                            if(requestAddHasCateg.status != 200)
+                            {
+                                reject();
+                            }
+                        }
+                        requestAddHasCateg.onerror = function()
+                        {
+                            reject();
+                        }
                     }
-                    console.log(hasCategAdd);
-                    requestAddHasCateg.send(JSON.stringify(hasCategAdd));
-                }
+                    resolve();
+                });
+                
             }
             if(hasCategDels)
             {
-                for(hasCategDel of hasCategDels)
+                let promiseHasCategDel = new Promise(function(resolve, reject)
                 {
-                    var requestDelHasCateg = new XMLHttpRequest();
-                    requestDelHasCateg.open('DELETE', 'http://localhost:8000/api/has-categ');
-                    requestDelHasCateg.setRequestHeader('Content-Type', 'application/json');
-                    requestDelHasCateg.onload = function()
+                    for(hasCategDel of hasCategDels)
                     {
-                        console.log('A rela being deleted');
+                        var requestDelHasCateg = new XMLHttpRequest();
+                        requestDelHasCateg.open('DELETE', 'http://localhost:8000/api/has-categ');
+                        requestDelHasCateg.setRequestHeader('Content-Type', 'application/json');
+                        requestDelHasCateg.send(JSON.stringify(hasCategDel));
+                        requestDelHasCateg.onload = function()
+                        {
+                            console.log('A rela being deleted');
+                            if(requestDelHasCateg.status!= 200)
+                            {
+                                reject();
+                            }
+                        }
+                        requestDelHasCateg.onerror = function()
+                        {
+                            reject();
+                        }
                     }
-                    requestDelHasCateg.send(JSON.stringify(hasCategDel));
-                }
+                    resolve();
+                });  
             }
             // send the diff tags to save new one if necessary and get its id to record rela
-            console.log(diffTags);
             if(diffTags)
             {
                 for(tag of diffTags)
@@ -270,11 +306,11 @@ window.onload = function()
                         name: tag
                     };
                     var diffTagID;
-                    var requestDiffTag = new XMLHttpRequest();
-                    requestDiffTag.open('POST', 'http://localhost:8000/api/tags');
-                    requestDiffTag.setRequestHeader('Content-Type', 'application/json');
                     let promise = new Promise(function(resolve, reject)
                     {
+                        var requestDiffTag = new XMLHttpRequest();
+                        requestDiffTag.open('POST', 'http://localhost:8000/api/tags');
+                        requestDiffTag.setRequestHeader('Content-Type', 'application/json');
                         requestDiffTag.send(JSON.stringify(tagObject));
                         requestDiffTag.onload = function()
                         {
@@ -292,7 +328,7 @@ window.onload = function()
                         }
                     });
                     // save rela
-                    promise.then(function(msgSuccess)
+                    promiseHasTagAdd = promise.then(function(msgSuccess)
                     {
                         diffTagID = msgSuccess;
                         var hasTag = 
@@ -308,33 +344,61 @@ window.onload = function()
                         requestHasTagAdd.onload = function()
                         {
                             console.log('New tags are being recorded');
+                            if(requestHasTagAdd.status != 200)
+                            {
+                                reject();
+                            }
+                            resolve();
                         }
                     });
                 }
             }
             // delete the relationship with old tags
-            console.log(discardedTags);
             if(discardedTags)
             {
-                for (tag of discardedTags)
+                let promiseHasTagDel = new Promise(function(resolve, reject)
                 {
-                    var requestDelHasTag = new XMLHttpRequest();
-                    var hasTagDel = 
+                    for (tag of discardedTags)
                     {
-                        idposts: postID,
-                        name: tag
+                        var requestDelHasTag = new XMLHttpRequest();
+                        var hasTagDel = 
+                        {
+                            idposts: postID,
+                            name: tag
+                        }
+                        requestDelHasTag.open('DELETE','http://localhost:8000/api/has-tag');
+                        requestDelHasTag.setRequestHeader('Content-Type', 'application/json');
+                        requestDelHasTag.send(JSON.stringify(hasTagDel));
+                        requestDelHasTag.onload = function()
+                        {
+                            console.log('Deleting old rela');
+                            if(requestDelHasTag.status != 200)
+                            {
+                                reject();
+                            }
+                        }
+                        requestDelHasTag.onerror = function()
+                        {
+                            reject();
+                        }
                     }
-                    requestDelHasTag.open('DELETE','http://localhost:8000/api/has-tag');
-                    requestDelHasTag.setRequestHeader('Content-Type', 'application/json');
-                    requestDelHasTag.send(JSON.stringify(hasTagDel));
-                    requestDelHasTag.onload = function()
-                    {
-                        console.log('Deleting old rela');
-                    }
-                }
+                    resolve();
+                });
             }
+            // redirect to the post
+            Promise.all([promisePost, promiseHasCategAdd, promiseHasCategDel, promiseHasTagAdd, promiseHasTagDel]).then(function(allResolves)
+            {
+                window.location.assign('http://localhost:8000/post-view-index/'+postID);
+            });
         }
-        // redirect to the post 
-        window.location.assign('http://localhost:8000/post-view-index/'+postID);
+    }
+    var cancelButton = document.getElementById('cancelButton');
+    cancelButton.onclick = function(e)
+    {
+        var confirmDiscard = window.confirm('Are you sure you want to discard the changes?');
+        if(confirmDiscard)
+        {
+            window.location.assign('http://localhost:8000/home-view-index.html');
+        }
     }
 }

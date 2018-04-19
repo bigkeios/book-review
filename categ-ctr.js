@@ -31,7 +31,7 @@ module.exports =
     {
         let promise = new Promise(function(resolve, reject)
         {
-            connection.query('SELECT category.name name FROM posts_has_category natural join category WHERE posts_has_category.idposts=?;', [req.params.post_id], function(err, rows, fields)
+            connection.query('SELECT category.name FROM posts_has_category natural join category WHERE posts_has_category.idposts=?;', [req.params.post_id], function(err, rows, fields)
             {
                 console.log(this.sql);
                 if(err)
