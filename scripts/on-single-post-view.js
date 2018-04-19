@@ -257,7 +257,7 @@ window.onload = function()
                 requestDelRelaCateg.send();
                 // delete the relationship between the post and tags
                 var requestDelRelaTag = new XMLHttpRequest();
-                requestDelRelaTag.open('DELETE', 'http://localhost:8000/api/delete-relation-with-tag/'+postID);
+                requestDelRelaTag.open('DELETE', 'http://localhost:8000/api/has-tag/'+postID);
                 requestDelRelaTag.onload = function()
                 {
                     console.log('Relationship with tags being deleted');

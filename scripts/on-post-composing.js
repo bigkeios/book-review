@@ -105,7 +105,7 @@ window.onload = function()
                     // request to create new tag
                     // the request will send back the id of the newly created tag
                     var requestTag = new XMLHttpRequest();
-                    requestTag.open('POST', 'http://localhost:8000/api/create-tag');
+                    requestTag.open('POST', 'http://localhost:8000/api/tags');
                     requestTag.setRequestHeader('Content-Type', 'application/json');
                     var tagID;
                     let promise = new Promise(function(resolve, reject)

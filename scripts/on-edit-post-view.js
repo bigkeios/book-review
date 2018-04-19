@@ -1,5 +1,3 @@
-import { resolve } from "url";
-
 window.onload = function()
 {
     // get the ID of the post
@@ -74,6 +72,7 @@ window.onload = function()
     var tags;
     requestTags.onload = function()
     {
+        // these are the old tags
         tags = JSON.parse(this.response);
         for(tag of tags)
         {
@@ -84,10 +83,11 @@ window.onload = function()
     // get the elements' value that changes
     // vars to record changes
     // patch is the description for changes, supposed to be sent with PATCH request
-    var patchesPost=[];
+    var patchesPost= [];
     var hasCategAdds = [];
     var hasCategDels = [];
-    var hasTag = new Object();
+    var diffTags = [];
+    var discardedTags = [];
     var regexCategID = new RegExp('^[1-9]*$')
     title.addEventListener('change', catchDataChange);
     content.addEventListener('change', catchDataChange);
@@ -105,7 +105,64 @@ window.onload = function()
         }
         else if(fieldChangedID === 'postTag')
         {
-
+            // compare old tags and new tags
+            // -> same -> let them be
+            // -> different --> save new rela and delete old rela
+            var editTags = tagsField.value;
+            var editTagsSplitted = editTags.split(', ');
+            if(tags)
+            {
+                // find different tags from the old ones
+                for(editTag of editTagsSplitted)
+                {
+                    var diff = false;
+                    for(oldTag of tags)
+                    {
+                        if(editTag != oldTag.name)
+                        {
+                            diff = true;
+                        }
+                        else
+                        {
+                            diff = false;
+                            break;
+                        }
+                    }
+                    // if the tag different from all old tags, it is the different tag
+                    if(diff)
+                    {
+                        diffTags.push(editTag);
+                    }
+                }
+                // find the old tag that was removed
+                for(oldTag of tags)
+                {
+                    var discarded = false;
+                    for(editTag of editTagsSplitted)
+                    {
+                        if(oldTag.name != editTag)
+                        {
+                            discarded = true;
+                        }
+                        else
+                        {
+                            discarded = false;
+                            break;
+                        }
+                    }
+                    if(discarded)
+                    {
+                        discardedTags.push(oldTag.name);
+                    }
+                }
+            }
+            if(!tags.length)
+            {
+                for(tag of editTagsSplitted)
+                {
+                    diffTags.push(tag);
+                }
+            }
         }
         // check the categs that has checking changed
         else if(regexCategID.test(fieldChangedID))
@@ -137,39 +194,40 @@ window.onload = function()
     var submitButton = document.getElementById('submitButton');
     submitButton.onclick = function(e)
     {
-        let promise = new Promise(function(resolve, reject)
+        if(patchesPost)
         {
-            if(patchesPost)
+            var okPost;
+            var okHasCateg;
+            var okHasTag;
+            // add modified date for patch of post's changes
+            var today = new Date();
+            // getDate return the day of the month, while getDay returns day of thw week
+            var day = today.getDate();
+            var month = today.getMonth()+1;
+            var year = today.getFullYear();
+            // if day and month 1-9, need to add a zero
+            if(day < 10)
             {
-                // add modified date for patch of post's changes
-                var today = new Date();
-                // getDate return the day of the month, while getDay returns day of thw week
-                var day = today.getDate();
-                var month = today.getMonth()+1;
-                var year = today.getFullYear();
-                // if day and month 1-9, need to add a zero
-                if(day < 10)
-                {
-                    day = '0' + day;
-                }
-                if(month < 10)
-                {
-                    month = '0' + month;
-                }
-                var todayStr = year + month + day;
-                patchesPost.push({op: "replace", path: "/dateModified", value:todayStr});
-                // submit post changes
-                // parse patches into json
-                patchesPost = JSON.stringify(patchesPost);
-                var requestPostChanges = new XMLHttpRequest();
-                requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
-                requestPostChanges.setRequestHeader('Content-Type', 'application/json');
-                requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
-                requestPostChanges.send(patchesPost);
-                requestPostChanges.onloadend = function()
-                {
-                    patchesPost = null;
-                }
+                day = '0' + day;
+            }
+            if(month < 10)
+            {
+                month = '0' + month;
+            }
+            var todayStr = year + month + day;
+            patchesPost.push({op: "replace", path: "/dateModified", value:todayStr});
+            // submit post changes
+            // parse patches into json
+            patchesPost = JSON.stringify(patchesPost);
+            var requestPostChanges = new XMLHttpRequest();
+            requestPostChanges.open('PATCH', 'http://localhost:8000/api/posts/'+postID);
+            requestPostChanges.setRequestHeader('Content-Type', 'application/json');
+            requestPostChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
+            requestPostChanges.send(patchesPost);
+            requestPostChanges.onloadend = function()
+            {
+                patchesPost = null;
+                okPost = true;
             }
             // submit changes in relationship with category
             if(hasCategAdds)
@@ -198,11 +256,85 @@ window.onload = function()
                     {
                         console.log('A rela being deleted');
                     }
-                    console.log(hasCategDel);
                     requestDelHasCateg.send(JSON.stringify(hasCategDel));
                 }
             }
-        });
-        
+            // send the diff tags to save new one if necessary and get its id to record rela
+            console.log(diffTags);
+            if(diffTags)
+            {
+                for(tag of diffTags)
+                {
+                    var tagObject = 
+                    {
+                        name: tag
+                    };
+                    var diffTagID;
+                    var requestDiffTag = new XMLHttpRequest();
+                    requestDiffTag.open('POST', 'http://localhost:8000/api/tags');
+                    requestDiffTag.setRequestHeader('Content-Type', 'application/json');
+                    let promise = new Promise(function(resolve, reject)
+                    {
+                        requestDiffTag.send(JSON.stringify(tagObject));
+                        requestDiffTag.onload = function()
+                        {
+                            var response = JSON.parse(this.response);
+                            // if the response has idtag, get the id of tag existed returned
+                            if(response.idtag)
+                            {
+                                resolve(response.idtag);
+                            }
+                            // if the response has insertId, get the id of tag newly created from result of inserting returned
+                            else if(response.insertId)
+                            {
+                                resolve(response.insertId);
+                            }
+                        }
+                    });
+                    // save rela
+                    promise.then(function(msgSuccess)
+                    {
+                        diffTagID = msgSuccess;
+                        var hasTag = 
+                        {
+                            idposts: postID,
+                            posts_idusers: 1,
+                            idtag: diffTagID
+                        };
+                        var requestHasTagAdd = new XMLHttpRequest();
+                        requestHasTagAdd.open('POST', 'http://localhost:8000/api/has-tag');
+                        requestHasTagAdd.setRequestHeader('Content-Type', 'application/json');
+                        requestHasTagAdd.send(JSON.stringify(hasTag));
+                        requestHasTagAdd.onload = function()
+                        {
+                            console.log('New tags are being recorded');
+                        }
+                    });
+                }
+            }
+            // delete the relationship with old tags
+            console.log(discardedTags);
+            if(discardedTags)
+            {
+                for (tag of discardedTags)
+                {
+                    var requestDelHasTag = new XMLHttpRequest();
+                    var hasTagDel = 
+                    {
+                        idposts: postID,
+                        name: tag
+                    }
+                    requestDelHasTag.open('DELETE','http://localhost:8000/api/has-tag');
+                    requestDelHasTag.setRequestHeader('Content-Type', 'application/json');
+                    requestDelHasTag.send(JSON.stringify(hasTagDel));
+                    requestDelHasTag.onload = function()
+                    {
+                        console.log('Deleting old rela');
+                    }
+                }
+            }
+        }
+        // redirect to the post 
+        window.location.assign('http://localhost:8000/post-view-index/'+postID);
     }
 }

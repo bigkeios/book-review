@@ -109,5 +109,22 @@ module.exports =
                 res.send(rows);
             }
         });
+    },
+    deleteARela: function(req, res)
+    {
+        req.app.use(bodyParser.json());
+        var request = req.body;
+        connection.query('DELETE FROM posts_has_tag, tag USING posts_has_tag NATURAL JOIN tag WHERE posts_has_tag.idposts=? AND tag.name=?', [request.idposts, request.name], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }
