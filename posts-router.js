@@ -61,4 +61,5 @@ module.exports = function(app, express)
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
     app.route('/api/posts/:post_id').delete(postsCtr.deleteAPost);
     app.route('/api/posts/:post_id').patch(postsCtr.updatePost);
+    app.route('api/posts/:post_id/comments').delete(postsCtr.deleteCommentsByPost);
 }

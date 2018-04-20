@@ -269,6 +269,14 @@ window.onload = function()
                     console.log('Relationship with tags being deleted');
                 }
                 requestDelRelaTag.send();
+                // delete the comments of the post
+                var requestDelCommentOfPost = new XMLHttpRequest();
+                requestDelCommentOfPost.open('DELETE', 'http://localhost:8000/api/posts/' + postID + '/comments');
+                requestDelCommentOfPost.send();
+                requestDelCommentOfPost.onload = function()
+                {
+                    console.log('Comments of post are being deleted');
+                }
                 // delete the post
                 var requestDelPost = new XMLHttpRequest();
                 requestDelPost.open('DELETE', 'http://localhost:8000/api/posts/'+postID);
@@ -290,13 +298,11 @@ window.onload = function()
                 {
                     idposts: postID
                 };
-                var cmtDelInfoJSON = JSON.stringify(cmtDelInfo);
-                requestDelComment.setRequestHeader('Content-Type', 'application/json');
                requestDelComment.onload = function()
                {
                    console.log('Comment being deleted');
                }
-               requestDelComment.send(cmtDelInfoJSON);
+               requestDelComment.send();
                // reload the page to display changes
                 window.location.reload(true);
             }

@@ -126,5 +126,20 @@ module.exports =
                 });
             }
         });
+    },
+    deleteCommentsByPost: function(req, res)
+    {
+        connection.query('DELETE FROM comment WHERE idposts=?', [req.params.post_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }   
