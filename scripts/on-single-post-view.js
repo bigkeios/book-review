@@ -78,6 +78,7 @@ window.onload = function()
             // create div for a new comment
             var comment = document.createElement('div');
             comment.setAttribute('class', 'comment');
+            comment.setAttribute('id', 'comment#'+cmt.idcomment);
             comments.item(0).appendChild(comment);
             // create the edit/delete menu for the comment
             var modifyMenu = document.createElement('div');
@@ -111,7 +112,7 @@ window.onload = function()
             var deleteOptionA = document.createElement('a');
             deleteOptionA.setAttribute('class', 'deleteOption');
             deleteOptionA.setAttribute('id', 'deleteOptionOnCmt#'+cmt.idcomment);
-            deleteOptionA.setAttribute('href','');
+            deleteOptionA.setAttribute('href','#');
             deleteOptionA.addEventListener('click', chooseToDelete);
             deleteOptionA.textContent =  'Delete';
             deleteOptionLi.appendChild(deleteOptionA);
@@ -121,10 +122,15 @@ window.onload = function()
             var username = document.createElement('h4');
             username.textContent = cmt.name;
             comment.appendChild(username);
+            var dateSent = document.createElement('small');
+            console.log(cmt);
+            var dateCreated = new Date(cmt.dateCreated);
+            dateSent.textContent = dateCreated.toDateString();
+            comment.appendChild(dateSent);
             var cmtContent = document.createElement('p');
             cmtContent.textContent = cmt.content;
             comment.appendChild(cmtContent);
-            comment.appendChild(document.createElement('br'));
+            comment.appendChild(document.createElement('hr'));
         }        
     }
     requestCmt.send();
@@ -167,7 +173,7 @@ window.onload = function()
         console.log(formDataCmtJsonString);
         // send the data of the comment
         var requestSendCmt = new XMLHttpRequest();
-        requestSendCmt.open('POST', 'http://localhost:8000/api/send-comment');
+        requestSendCmt.open('POST', 'http://localhost:8000/api/comments');
         requestSendCmt.setRequestHeader('Content-Type','application/json');
         requestSendCmt.send(formDataCmtJsonString);
         requestSendCmt.onload = function()
@@ -279,7 +285,7 @@ window.onload = function()
                 var idClickedSplitted = clickedOptionID.split('#');
                 var commentID = idClickedSplitted[1];
                 var requestDelComment = new XMLHttpRequest();
-               requestDelComment.open('DELETE', 'http://localhost:8000/api/delete-comment/'+commentID);
+               requestDelComment.open('DELETE', 'http://localhost:8000/api/comments/'+commentID);
                var cmtDelInfo = 
                 {
                     idposts: postID
@@ -300,17 +306,86 @@ window.onload = function()
     var editOption = document.getElementsByClassName('editOption');
     // get the option on post
     editOption.item(0).addEventListener('click', chooseToEdit);
+    // the event listeners for options on comments were assigned when they are loaded
     function chooseToEdit(e)
     {
         var clickedOptionID = e.target.getAttribute('id');
         var regexEditCmt = new RegExp('editOptionOnCmt*');
+        // edit for the post
         if(clickedOptionID === 'editOptionOnPost')
         {
+            
             window.location.assign('http://localhost:8000/edit-post-index/'+postID);
         }
-        else if(regexEditCmt.test(clickedOptionID))
+        // edit for the comment
+        if(regexEditCmt.test(clickedOptionID))
         {
-
+            var idEditSelectSplitted = clickedOptionID.split('#');
+            var commentID = idEditSelectSplitted[1]
+            var comment = document.getElementById('comment#'+commentID);
+            var commentContent = comment.getElementsByTagName('p')[0];
+            // create a new node to replace the comment's content which will be replaced by a textarea for editing comment
+            var cmtEdit = document.createElement('div');
+            cmtEdit.setAttribute('class', 'editComment');
+            var cmtEditTArea = document.createElement('textarea');
+            cmtEditTArea.setAttribute('rows', '5');
+            cmtEditTArea.setAttribute('cols', '100')
+            cmtEditTArea.value = commentContent.textContent;
+            cmtEdit.appendChild(cmtEditTArea);
+            var cmtSaveButton = document.createElement('input');
+            cmtSaveButton.setAttribute('type', 'submit');
+            cmtSaveButton.setAttribute('value', 'Save');
+            cmtSaveButton.setAttribute('id', 'cmtChangesSave');
+            cmtEdit.appendChild(cmtSaveButton);
+            var cmtCancelButton = document.createElement('input');
+            cmtCancelButton.setAttribute('type', 'submit');
+            cmtCancelButton.setAttribute('value', 'Cancel');
+            cmtCancelButton.setAttribute('id', 'cmtChangesDiscard');
+            cmtEdit.appendChild(cmtCancelButton);
+            // replace commentContent with commentEdit
+            comment.replaceChild(cmtEdit, commentContent);
+            // catch content changes in comment
+            var commentChanges = [];
+            cmtEditTArea.onchange =  function(e)
+            {
+                commentChanges.push({op:'replace', path: '/content', value: e.target.value});
+            }
+            cmtSaveButton.onclick = function()
+            {
+                // add modified date
+                var today = new Date();
+                // getDate return the day of the month, while getDay returns day of thw week
+                var day = today.getDate();
+                var month = today.getMonth()+1;
+                var year = today.getFullYear();
+                // if day and month 1-9, need to add a zero
+                if(day < 10)
+                {
+                    day = '0' + day;
+                }
+                if(month < 10)
+                {
+                    month = '0' + month;
+                }
+                var todayStr = year + month + day;
+                commentChanges.push({op:'replace', path: '/dateModified', value: todayStr});
+                // send the changes
+                commentChanges = JSON.stringify(commentChanges);
+                var requestCommentChanges = new XMLHttpRequest();
+                requestCommentChanges.open('PATCH', 'http://localhost:8000/api/comments/'+commentID);
+                requestCommentChanges.setRequestHeader('Content-Type', 'application/json');
+                requestCommentChanges.setRequestHeader('X-HTTP-Method-Override', 'PATCH');
+                requestCommentChanges.send(commentChanges);
+                requestCommentChanges.onload = function()
+                {
+                    // if the request succeeded, reload to show changes
+                    window.location.reload(true);
+                }
+            }
+            cmtCancelButton.onclick = function()
+            {
+                comment.replaceChild(commentContent, cmtEdit);
+            }
         }
     }
 }

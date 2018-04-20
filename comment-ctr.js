@@ -1,5 +1,6 @@
 var connection = require('./connection');
 var bodyParser = require('body-parser');
+var jsonPatch = require('jsonpatch');
 module.exports = 
 {
     getCommentByPost: function(req, res)
@@ -7,7 +8,7 @@ module.exports =
         let promise = new Promise(function(resolve, reject)
         {
             var postID = [req.params.post_id];
-           connection.query('SELECT comment.idcomment, comment.content, users.name FROM comment NATURAL JOIN users WHERE comment.idposts = ?', [postID], function(err, rows, fields)
+           connection.query('SELECT comment.idcomment, comment.content, users.name, comment.dateCreated FROM comment NATURAL JOIN users WHERE comment.idposts = ?', [postID], function(err, rows, fields)
             {
                 console.log(this.sql);
                if(err)
@@ -55,11 +56,9 @@ module.exports =
            res.send(msgFail); 
         });
     },
-    deleteCommentsOfPost: function(req,res)
+    deleteComment: function(req,res)
     {
-        req.app.use(bodyParser.json());
-        console.log(req.body);
-        connection.query('DELETE FROM comment WHERE idposts=? and idcomment=?',[req.body.idposts, req.params.comment_id], function(err, rows, fields)
+        connection.query('DELETE FROM comment WHERE idcomment=?',[req.params.comment_id], function(err, rows, fields)
         {
             console.log(this.sql);
             if(err)
@@ -69,6 +68,36 @@ module.exports =
             else
             {
                 res.send(rows);
+            }
+        });
+    },
+    updateComment: function(req, res)
+    {
+        req.app.use(bodyParser.json());
+        var patches = req.body;
+        connection.query('SELECT * FROM comment WHERE idcomment=?', [req.params.comment_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                var comment = rows[0];
+                comment = jsonPatch.apply_patch(comment, patches);
+                connection.query('UPDATE comment SET content = ?, dateModified = ? WHERE idcomment=?', [comment.content, comment.dateModified, comment.idcomment], function(err, rows, fields)
+                {
+                    console.log(this.sql);
+                    if(err)
+                    {
+                        res.send(err);
+                    }
+                    else
+                    {
+                        res.send(rows);
+                    }
+                });
             }
         });
     }
