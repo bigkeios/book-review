@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Post's title</title>
+    <title>A book-review blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/post-main.css" />
-    <script src="../scripts/on-single-post-view.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/home-main.css" />
+    <script type="module" src="../scripts/posts-import.js"></script>
 </head>
 <body>
     <div class="header">
@@ -25,35 +25,16 @@
     </div>
     <!-- end header -->
     <div class="body">
+        <h2 id="pageViewedFor"></h2>
         <div class="row">
             <div class="col-8 posts">
-                <div class="post">
-                    <div class="modifyMenu">
-                        <a href=""><span><img class="menuSelect" id="menuSelectOnPost" src="../public/option.svg" height="15" width="15"></span></a>
-                        <ul class="menuOptions" id="menuOptionsOnPost" style="display:none">
-                            <li><a href='#' class="editOption" id="editOptionOnPost">Edit</a></li>
-                            <li><a href="#deleteOptionOnPost" class="deleteOption" id="deleteOptionOnPost" >Delete</a></li>
-                        </ul>
-                    </div>
-                    <!-- end modifyOption -->
-                </div>
-                <!-- end post -->
             </div>
             <!-- end col-8 posts -->
             <% include partials/side-menu %>
         </div>
-        <div class="commentSection">
-            <h3>Comment</h3>
-            <textarea placeholder="Enter your comment" rows="5" cols="100" id="commentContent"></textarea>
-            <input type="submit" id="commentSubmit" value="Send">
-            <div class="comments">
-                
-            </div>
-            <!-- end comments -->
-        </div>
-        <!-- end comment-section -->
     </div>
-    <!-- end body -->
+    <!-- end content -->
+    <br></br>
     <footer>
         <div class="footer">
             <div class="row">
@@ -74,5 +55,4 @@
         </div>
     </footer>
 </body>
-
 </html>
