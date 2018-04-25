@@ -26,21 +26,6 @@ module.exports =
             res.send(msgFail);  
         })
     },
-    getTagByPost: function(req, res)
-    {
-        connection.query('SELECT tag.name FROM tag NATURAL JOIN posts_has_tag WHERE idposts=?',[req.params.post_id], function(err, rows, fields)
-        {
-            console.log(this.sql);
-            if(err)
-            {
-                res.send(err);
-            }
-            else
-            {
-                res.send(rows);
-            }
-        });
-    },
     createNewTag: function(req, res)
     {
         req.app.use(bodyParser.json());
@@ -74,39 +59,6 @@ module.exports =
                 {
                     res.send(rows[0]);
                 }
-            }
-        });
-    },
-    saveRelaWPost: function(req, res)
-    {
-        req.app.use(bodyParser.json());
-        var hasTagInfo = req.body;
-        console.log();
-        connection.query('INSERT INTO posts_has_tag SET idposts = ?, posts_idusers = ?, idtag = ?', [hasTagInfo.idposts, hasTagInfo.posts_idusers, hasTagInfo.idtag], function(err, rows, fields)
-        {
-            console.log(this.sql);
-           if(err)
-           {
-                res.send(err);
-           } 
-           else
-           {
-                res.send(hasTagInfo);
-           }
-        });
-    },
-    deleteRelaWPost: function(req, res)
-    {
-        connection.query('DELETE FROM posts_has_tag WHERE idposts=?', [req.params.post_id], function(err, rows, fields)
-        {
-            console.log(this.sql);
-            if(err)
-            {
-                res.send(err);
-            }
-            else
-            {
-                res.send(rows);
             }
         });
     },

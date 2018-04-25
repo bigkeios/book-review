@@ -5,7 +5,7 @@ window.onload = function()
     var url = window.location.href;
     var urlSplitted = url.split('/')
     var postID = urlSplitted[4];
-    //load the categories
+    //load all categories
     var categsSelect = document.getElementById('categoriesSelect');
     var requestCategsAll = new XMLHttpRequest();
     requestCategsAll.open('GET','http://localhost:8000/api/categs');
@@ -49,7 +49,7 @@ window.onload = function()
     requestPost.send();
     // load categories selection of the post
     var requestCategs = new XMLHttpRequest();
-    requestCategs.open('GET', 'http://localhost:8000/api/categs/'+postID);
+    requestCategs.open('GET', 'http://localhost:8000/api/posts/'+postID+'/categories');
     var categs;
     requestCategs.onload = function()
     {
@@ -68,7 +68,7 @@ window.onload = function()
     requestCategs.send();
     // load the tags of the post
     var requestTags = new XMLHttpRequest();
-    requestTags.open('GET', 'http://localhost:8000/api/tags/'+postID);
+    requestTags.open('GET', 'http://localhost:8000/api/tags/'+postID+'/tags');
     var tags;
     requestTags.onload = function()
     {
@@ -173,7 +173,6 @@ window.onload = function()
                 var hasCategAdd = 
                 {
                     idCategory: fieldChangedID,
-                    idposts: postID,
                     posts_idusers: 1
                 };
                 hasCategAdds.push(hasCategAdd);
@@ -250,9 +249,9 @@ window.onload = function()
                     for(hasCategAdd of hasCategAdds)
                     {
                         var requestAddHasCateg = new XMLHttpRequest();
-                        requestAddHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
+                        requestAddHasCateg.open('POST', 'http://localhost:8000/api/posts/'+postID+'/categories/'+hasCategAdd.idCategory);
                         requestAddHasCateg.setRequestHeader('Content-Type', 'application/json');
-                        requestAddHasCateg.send(JSON.stringify(hasCategAdd));
+                        requestAddHasCateg.send(JSON.stringify({posts_idusers: 1}));
                         requestAddHasCateg.onload = function()
                         {
                             console.log('New rela being sent');

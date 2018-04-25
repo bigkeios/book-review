@@ -127,9 +127,104 @@ module.exports =
             }
         });
     },
+    getCategsOfPost: function(req, res)
+    {
+        connection.query('SELECT category.name FROM posts_has_category natural join category WHERE posts_has_category.idposts=?;', [req.params.post_id], function(err, rows, fields)
+            {
+                console.log(this.sql);
+                if(err)
+                {
+                    res.send(err)
+                }
+                else
+                {
+                    res.send(rows);
+                }
+            });
+    },
+    saveRelationWCateg: function(req, res)
+    {
+        req.app.use(bodyParser.json());
+        var hasCateg = req.body; 
+        connection.query('INSERT INTO posts_has_category SET idposts = ?, posts_idusers = ?, idCategory = ?', [req.params.post_id, hasCateg.posts_idusers, req.params.categ_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err)
+            } 
+            else
+            {
+                res.send(rows)
+            }
+        }); 
+    },
+    deleteRelationWCateg: function(req, res)
+    {
+        connection.query('DELETE FROM posts_has_category WHERE idposts=?',[req.params.post_id],function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
     deleteCommentsByPost: function(req, res)
     {
         connection.query('DELETE FROM comment WHERE idposts=?', [req.params.post_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
+    getTagsOfPost: function(req, res)
+    {
+        connection.query('SELECT tag.name FROM tag NATURAL JOIN posts_has_tag WHERE idposts=?',[req.params.post_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
+    saveRelationWTag: function(req, res)
+    {
+        req.app.use(bodyParser.json());
+        var hasTagInfo = req.body;
+        console.log();
+        connection.query('INSERT INTO posts_has_tag SET idposts = ?, posts_idusers = ?, idtag = ?', [req.params.post_id, hasTagInfo.posts_idusers, req.params.tag_id], function(err, rows, fields)
+        {
+            console.log(this.sql);
+           if(err)
+           {
+                res.send(err);
+           } 
+           else
+           {
+                res.send(hasTagInfo);
+           }
+        });
+    },
+    deleteRelationWTag: function(req, res)
+    {
+        connection.query('DELETE FROM posts_has_tag WHERE idposts=?', [req.params.post_id], function(err, rows, fields)
         {
             console.log(this.sql);
             if(err)

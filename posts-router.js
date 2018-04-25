@@ -61,5 +61,11 @@ module.exports = function(app, express)
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
     app.route('/api/posts/:post_id').delete(postsCtr.deleteAPost);
     app.route('/api/posts/:post_id').patch(postsCtr.updatePost);
+    app.route('/api/posts/:post_id/categories').get(postsCtr.getCategsOfPost);
+    app.route('/api/posts/:post_id/categories/:categ_id/').post(postsCtr.saveRelationWCateg);
+    app.route('/api/posts/:post_id/categories').delete(postsCtr.deleteRelationWCateg);
     app.route('api/posts/:post_id/comments').delete(postsCtr.deleteCommentsByPost);
+    app.route('/api/tags/:post_id/tags').get(postsCtr.getTagsOfPost);
+    app.route('/api/posts/:post_id/tags/:tag_id').post(postsCtr.saveRelationWTag);
+    app.route('/api/posts/:post_id/tags').delete(postsCtr.deleteRelationWTag)
 }

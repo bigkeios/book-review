@@ -148,24 +148,14 @@ window.onload = function()
                         promise.then(function(msgSuccess)
                         {
                             tagID = msgSuccess;
+                            console.log(tagID);
                             if(tagID)
                             {
-                                // pack data to send
-                                var formDataPostHasTag = new FormData();
-                                formDataPostHasTag.append('idposts', postID);
-                                formDataPostHasTag.append('posts_idusers', 1);
-                                formDataPostHasTag.append('idtag', tagID);
-                                var formDataHasTagObject = new Object();
-                                for(entry of formDataPostHasTag.entries())
-                                {
-                                    formDataHasTagObject[entry[0]] = entry[1];
-                                }
-                                var formDataHasTagJSON = JSON.stringify(formDataHasTagObject);
                                 // request to record the relationship between the tag and the post
                                 var requestPostHasTag = new XMLHttpRequest();
-                                requestPostHasTag.open('POST', 'http://localhost:8000/api/has-tag');
+                                requestPostHasTag.open('POST', 'http://localhost:8000/api/posts/'+postID+'/tags/'+tagID);
                                 requestPostHasTag.setRequestHeader('Content-Type', 'application/json');
-                                requestPostHasTag.send(formDataHasTagJSON);
+                                requestPostHasTag.send(JSON.stringify({posts_idusers:1}));
                                 requestPostHasTag.onload = function()
                                 {
                                     console.log('Info about the newly created post and its tag was sent');
@@ -192,23 +182,12 @@ window.onload = function()
                 var categsSelected = document.querySelectorAll('input[name="categ"]:checked');
                 for(categSelected of categsSelected)
                 {
-                    // pack data of each category to send
-                    var formDataPostsHasCateg = new FormData();
-                    formDataPostsHasCateg.append('idposts', postID);
-                    formDataPostsHasCateg.append('posts_idusers', '1');
-                    formDataPostsHasCateg.append('idCategory', categSelected.getAttribute('id'));
-                    var postHasCategObject = new Object();
-                    for(entry of formDataPostsHasCateg.entries())
-                    {
-                        postHasCategObject[entry[0]] = entry[1];
-                    }
-                    var postHasCategJson = JSON.stringify(postHasCategObject);
                     // record the relationship between post and category
                     
                         var requestPostHasCateg = new XMLHttpRequest();
-                        requestPostHasCateg.open('POST', 'http://localhost:8000/api/has-categ');
+                        requestPostHasCateg.open('POST', 'http://localhost:8000/api/posts/'+postID+'/categories/'+categSelected.getAttribute('id'));
                         requestPostHasCateg.setRequestHeader('Content-Type', 'application/json');
-                        requestPostHasCateg.send(postHasCategJson);
+                        requestPostHasCateg.send(JSON.stringify({posts_idusers: 1}));
                         requestPostHasCateg.onload = function()
                         {
                             console.log('Recorded relationship between post and categ');

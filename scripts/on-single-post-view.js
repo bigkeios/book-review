@@ -6,7 +6,6 @@ window.onload = function()
     var postID = urlSplitted[4];
     //------------------- load post
     var requestPost = new XMLHttpRequest();
-    // request.open('GET', '../static data/posts.json', true);
     requestPost.open('GET', 'http://localhost:8000/api/posts/' + postID);
     requestPost.onload = function () 
     {
@@ -31,7 +30,7 @@ window.onload = function()
     requestPost.send(); 
     //------------------- load categories of the post
     var requestCateg = new XMLHttpRequest();
-    requestCateg.open('GET','http://localhost:8000/api/categs/'+postID);
+    requestCateg.open('GET','http://localhost:8000/api/posts/'+postID+'/categories');
     requestCateg.onload = function()
     {
         var categs = JSON.parse(this.response);
@@ -49,7 +48,7 @@ window.onload = function()
     requestCateg.send();
     //------------------- load tags of the post
     var requestTag = new XMLHttpRequest();
-    requestTag.open('GET', 'http://localhost:8000/api/tags/'+postID);
+    requestTag.open('GET', 'http://localhost:8000/api/tags/'+postID+'/tags');
     requestTag.onload = function()
     {
         var tags = JSON.parse(this.response);
@@ -255,7 +254,7 @@ window.onload = function()
             {
                 // delete the relationship between the post and categs
                 var requestDelRelaCateg = new XMLHttpRequest();
-                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/has-categ/'+postID);
+                requestDelRelaCateg.open('DELETE', 'http://localhost:8000/api/posts/'+postID+'/categories');
                 requestDelRelaCateg.onload = function()
                 {
                     console.log('Relationship with categs being deleted');
@@ -263,7 +262,7 @@ window.onload = function()
                 requestDelRelaCateg.send();
                 // delete the relationship between the post and tags
                 var requestDelRelaTag = new XMLHttpRequest();
-                requestDelRelaTag.open('DELETE', 'http://localhost:8000/api/has-tag/'+postID);
+                requestDelRelaTag.open('DELETE', 'http://localhost:8000//api/posts/'+postID+'/tags');
                 requestDelRelaTag.onload = function()
                 {
                     console.log('Relationship with tags being deleted');
