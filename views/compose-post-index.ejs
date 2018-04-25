@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Compose post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/stylesheets/compose-post-main.css" />
+    <script src="../scripts/on-post-composing.js"></script>
+</head>
+<body>
+    <% include partials/header %>
+    <div class="body">
+        <h2 id="purposeForEditing">Compose a look into a book</h2>
+        <hr>
+        <h3>Title</h3>
+        <input type="text" placeholder="Enter the title" id="postTitle">
+        <small><p class="alert" id="titleAlert"></p></small>
+        <h3>Content</h3>
+        <textarea id="postContent" placeholder="Enter the content of the post" rows="20" cols="150"></textarea>
+        <small><p class="alert" id="contentAlert"></p></small>
+        <h3> Category </h3>
+        <div id="categoriesSelect">
+        </div>
+        <h3>Tags</h3>
+        <input type="text" placeholder="Enter the tags for the post here, each are separate by a comma" id="postTag">
+        <small><p class="alert" id="tagAlert"></p></small>
+        <input type="submit" value="Send" id="submitButton">
+        <input type="button" value="Cancel" id="cancelButton">
+    </div>
+    <% include partials/footer %>
+</body>
+</html>

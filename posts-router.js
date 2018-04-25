@@ -33,27 +33,27 @@ module.exports = function(app, express)
     // about page route
     app.get('/about-view.html', function(req, res)
     {
-        res.render('about-view.html');     
+        res.render('about-view.ejs');     
     });
     // Log in page route
     app.get('/log-in-view-index.html', function(req, res)
     {
-        res.render('log-in-view-index.html');     
+        res.render('log-in-view-index.ejs');     
     });
     // Sign-up page route
     app.get('/sign-up-view-index.html', function(req, res)
     {
-        res.render('sign-up-view-index.html');     
+        res.render('sign-up-view-index.ejs');     
     });
     // Composing post page route
     app.get('/compose-post-index.html', function(req, res)
     {
-        res.render('compose-post-index.html');     
+        res.render('compose-post-index.ejs');     
     });
     // Edit post page route
     app.get('/edit-post-index/:post_id', function(req, res)
     {
-        res.render('edit-post-index.html');
+        res.render('edit-post-index.ejs');
     });
     // Posts by categs page route
     app.get('/categories/:categ_id', function(req, res)
