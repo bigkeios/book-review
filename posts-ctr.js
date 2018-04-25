@@ -236,5 +236,82 @@ module.exports =
                 res.send(rows);
             }
         });
+    },
+    getAllArchivesTime: function(req, res)
+    {
+        connection.query('SELECT extract(year_month from dateCreated) as yearMonth FROM posts GROUP BY yearMonth', function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
+    getPostsByCateg: function(req, res)
+    {
+        connection.query('SELECT posts.idposts, posts.title, posts.content, posts.dateCreated FROM posts NATURAL JOIN posts_has_category WHERE posts_has_category.idCategory=?', [req.params.categ_id], function(err, rows, fields)
+        {
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
+    getPostsByTag: function(req, res)
+    {
+        connection.query('SELECT posts.idposts, posts.title, posts.content, posts.dateCreated FROM posts NATURAL JOIN posts_has_tag WHERE posts_has_tag.idtag=?', [req.params.tag_id], function(err, rows, fields)
+        {
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
+    getPostByDateCreated: function(req, res)
+    {
+        var yearMonthStrStart = req.params.time;
+        yearMonthStrStart += '01';
+        var yearStr = new String;
+        for(var i = 0; i < 4; ++i)
+        {
+            yearStr += yearMonthStrStart.charAt(i);
+        }
+        var monthNumStart = Number(yearMonthStrStart.charAt(4) + yearMonthStrStart.charAt(5));
+        var monthNumEnd = monthNumStart+1;
+        var yearMonthStrEnd;
+        if(monthNumEnd < 10)
+        {
+            yearMonthStrEnd = yearStr+'0'+monthNumEnd+'01';
+        }
+        else
+        {
+            yearMonthStrEnd = yearStr+monthNumEnd+'01';
+        }
+        // -> yyyymmdd (ex:20180201 or 20181201)
+        connection.query('SELECT posts.idposts, posts.title, posts.content, posts.dateCreated FROM posts WHERE dateCreated >= date(?) AND dateCreated < date(?)', [yearMonthStrStart, yearMonthStrEnd], function(err, rows, fields)
+        {
+            console.log(this.sql);
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
     }
 }   

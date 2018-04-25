@@ -62,6 +62,20 @@ module.exports =
             }
         });
     },
+    getTagByID: function(req, res)
+    {
+        connection.query('SELECT name FROM tag WHERE idtag=?', [req.params.tag_id], function(err, rows, fields)
+        {
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
     deleteARela: function(req, res)
     {
         req.app.use(bodyParser.json());

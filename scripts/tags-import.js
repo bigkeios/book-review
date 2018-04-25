@@ -14,8 +14,11 @@ function populateTag(jsonData)
     {
         // creating element to store a tag (of the post, just the name)
         var tagName = document.createElement('li');
+        var tagLink = document.createElement('a');
+        tagName.appendChild(tagLink);
         //putting data into newly created elements
-        tagName.textContent = jsonData[i].name;
+        tagLink.setAttribute('href', '../tags/'+jsonData[i].idtag);
+        tagLink.textContent = jsonData[i].name;
         //append the new elements into the document (tags div to be specific)
         // tags is obtained from getElementByClassName so it is a HTMLCollection -> access first elements through item()
         tagList.appendChild(tagName);

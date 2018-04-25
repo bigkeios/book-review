@@ -19,16 +19,16 @@ module.exports = function(app, express)
     // home page route
     app.get('/', function(req, res)
     {
-        res.render('home-view-index.html');     
+        res.render('home-view-index.ejs');     
     });
     app.get('/home-view-index.html', function(req, res)
     {
-        res.render('home-view-index.html');     
+        res.render('home-view-index.ejs');     
     });
     // each post route
     app.get('/post-view-index/:post_id', function(req, res)
     {
-        res.render('post-view-index.html');     
+        res.render('post-view-index.ejs');     
     });
     // about page route
     app.get('/about-view.html', function(req, res)
@@ -55,16 +55,39 @@ module.exports = function(app, express)
     {
         res.render('edit-post-index.html');
     });
-    // routes for APIs
+    // Posts by categs page route
+    app.get('/categories/:categ_id', function(req, res)
+    {
+        res.render('home-view-index.ejs');
+    });
+    // Posts by tags page route
+    app.get('/tags/:tag_id', function(req, res)
+    {
+       res.render('home-view-index.ejs'); 
+    });
+    // Posts by time page route
+    app.get('/time/:time', function(req, res)
+    {
+        res.render('home-view-index.ejs');
+    });
+    // API ROUTES
+    // routes for posts
     app.route('/api/posts').get(postsCtr.listAllPosts);
     app.route('/api/posts').post(postsCtr.sendPost);
     app.route('/api/posts/:post_id').get(postsCtr.getPostById);
     app.route('/api/posts/:post_id').delete(postsCtr.deleteAPost);
     app.route('/api/posts/:post_id').patch(postsCtr.updatePost);
+    app.route('/api/posts/archives/time').get(postsCtr.getAllArchivesTime);
+    app.route('/api/posts/archives/categories/:categ_id').get(postsCtr.getPostsByCateg);
+    app.route('/api/posts/archives/tags/:tag_id').get(postsCtr.getPostsByTag)
+    app.route('/api/posts/archives/time/:time').get(postsCtr.getPostByDateCreated);
+    // routes for categs in relation with posts
     app.route('/api/posts/:post_id/categories').get(postsCtr.getCategsOfPost);
     app.route('/api/posts/:post_id/categories/:categ_id/').post(postsCtr.saveRelationWCateg);
     app.route('/api/posts/:post_id/categories').delete(postsCtr.deleteRelationWCateg);
+    // routes for comments in relation with posts
     app.route('api/posts/:post_id/comments').delete(postsCtr.deleteCommentsByPost);
+    // routes for tags in relation with posts
     app.route('/api/tags/:post_id/tags').get(postsCtr.getTagsOfPost);
     app.route('/api/posts/:post_id/tags/:tag_id').post(postsCtr.saveRelationWTag);
     app.route('/api/posts/:post_id/tags').delete(postsCtr.deleteRelationWTag)

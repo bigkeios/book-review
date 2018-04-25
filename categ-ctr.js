@@ -27,7 +27,20 @@ module.exports =
             res.send(msgFail);   
         });
     },
-    
+    getCategByID: function(req, res)
+    {
+        connection.query('SELECT name FROM category WHERE idCategory=?', [req.params.categ_id], function(err, rows, fields)
+        {
+            if(err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.send(rows);
+            }
+        });
+    },
     deleteARela: function(req,res)
     {
         req.app.use(bodyParser.json());
