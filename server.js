@@ -1,14 +1,22 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var passport = require('passport');
+var localStrategy = require('passport-local').Strategy;
 var postsRouters = require('./posts-router');
 var categRouters = require('./categ-router');
 var commentRouters = require('./comment-router');
 var tagRouters = require('./tag-router');
+var userRouters = require('./user-router');
 // start an express app
 var app = express();
 app.use(bodyParser.json());
+app.use(session({secret:"this-is-a-secret-token", resave: "true", saveUninitialized: "false", cookie:{maxAge:6000}}));
+app.use(passport.initialize());
+app.use(passport.session());
 postsRouters(app, express);
 categRouters(app);
 commentRouters(app);
 tagRouters(app);
+userRouters(app);
 app.listen(8000);
