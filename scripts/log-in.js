@@ -10,12 +10,12 @@ window.onload = function()
             password: document.getElementById('password').value
         }
         var logInRequest = new XMLHttpRequest();
-        logInRequest.open('POST', 'http://localhost:8000/users/login/');
+        logInRequest.open('POST', 'http://localhost:8000/users/login');
         logInRequest.setRequestHeader('Content-Type', 'application/json');
         logInRequest.send(JSON.stringify(logInInfo));
         logInRequest.onload = function()
         {
-            window.alert("Log in successfully");
+            window.location.assign('http://localhost:8000/home-view-index.html');
         }
     }
 }

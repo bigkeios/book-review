@@ -11,12 +11,12 @@ var userRouters = require('./user-router');
 // start an express app
 var app = express();
 app.use(bodyParser.json());
-app.use(session({secret:"this-is-a-secret-token", resave: "true", saveUninitialized: "false", cookie:{maxAge:6000}}));
+app.use(session({secret:"this-is-a-secret-token", resave: "true", saveUninitialized: "false"}));
 app.use(passport.initialize());
 app.use(passport.session());
-postsRouters(app, express);
+postsRouters(app, express, passport, localStrategy);
 categRouters(app);
 commentRouters(app);
 tagRouters(app);
-userRouters(app);
+userRouters(app, express, passport, localStrategy);
 app.listen(8000);
