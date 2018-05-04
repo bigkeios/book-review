@@ -11,7 +11,11 @@
     <script src="../scripts/log-in.js"></script> 
 </head>
 <body>
-    <% include partials/header %>
+    <% if(isAuthenticated){%>
+        <% include partials/header %>
+    <% } else{%>
+        <% include partials/header %>
+    <% } %>
     <div class="body">
         <div class="row"> 
             <div class="col-5 log-in">

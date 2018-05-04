@@ -22,6 +22,11 @@ body
     margin-top: 0;
     text-align: center;
 }
+.header a
+{
+    color: white;
+    text-decoration: none;
+}
 /*-- Navbar --*/
 .navbar
 {
@@ -89,7 +94,7 @@ body
     border-right: 2px solid white;
 }
 /*---- Input type ----- */
-input[type=text], textarea
+input[type=text], input[type=password],textarea
 {
     display: block;
     margin-bottom: 5px;

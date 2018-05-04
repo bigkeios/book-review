@@ -10,7 +10,11 @@
     <script src="../scripts/on-edit-post-view.js"></script>
 </head>
 <body>
-    <% include partials/header %>
+    <% if(isAuthenticated){%>
+        <% include partials/header %>
+    <% } else{%>
+        <% include partials/header-logged-in %>
+    <% } %>
     <div class="body">
         <h2 id="purposeForEditing">Edit post</h2>
         <hr>

@@ -10,20 +10,11 @@
     <script src="../scripts/on-single-post-view.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>A book-review blog</h1>
-        <div class="navbar">
-            <ul>
-                <li><a href="../home-view-index.html">Home</a></li>
-                <li><a href="../about-view.html">About</a></li>
-                <li><a href="../log-in-view-index.html">Log in</a></li>
-                <li><a href="../sign-up-view-index.html">Sign up</a></li>
-                <li><a href="../compose-post-index.html"><button>Compose a post</button></a></li>
-            </ul>
-        </div>
-        <!-- end navbar -->
-    </div>
-    <!-- end header -->
+    <% if(isAuthenticated){%>
+        <% include partials/header %>
+    <% } else{%>
+        <% include partials/header %>
+    <% } %>
     <div class="body">
         <div class="row">
             <div class="col-8 posts">

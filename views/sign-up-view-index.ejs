@@ -10,7 +10,11 @@
     <!-- <script src="main.js"></script> -->
 </head>
 <body>
-    <% include partials/header %>
+    <% if(isAuthenticated){%>
+        <% include partials/header %>
+    <% } else{%>
+        <% include partials/header %>
+    <% } %>
     <div class="body">
         <h2>Sign up</h2>
         <form class="sign-up-form">

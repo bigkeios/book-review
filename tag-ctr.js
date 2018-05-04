@@ -30,7 +30,7 @@ module.exports =
     {
         req.app.use(bodyParser.json());
         var tag = req.body;
-        connection.query('SELECT idtag, COUNT(*) as count FROM tag WHERE name = ?', [tag.name], function(err, rows, fields)
+        connection.query('SELECT idtag FROM tag WHERE name = ?', [tag.name], function(err, rows, fields)
         {
             if(err)
             {
@@ -39,7 +39,7 @@ module.exports =
             else
             {
                 // if the tag has not existed, create a new tag
-                if(rows[0].count == 0 )
+                if(rows.size == 0 )
                 {
                     connection.query('INSERT INTO tag SET name=?',[tag.name], function(err, rows, fields)
                     {
@@ -55,7 +55,7 @@ module.exports =
                     });
                 }
                 // else send back the id of the tag in the db
-                else if(rows[0].count > 0)
+                else if(rows.size > 0)
                 {
                     res.send(rows[0]);
                 }

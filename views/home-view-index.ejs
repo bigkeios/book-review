@@ -10,20 +10,11 @@
     <script type="module" src="../scripts/posts-import.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>A book-review blog</h1>
-        <div class="navbar">
-            <ul>
-                <li><a href="../home-view-index.html">Home</a></li>
-                <li><a href="../about-view.html">About</a></li>
-                <li><a href="../log-in-view-index.html">Log in</a></li>
-                <li><a href="../sign-up-view-index.html">Sign up</a></li>
-                <li><a href="../compose-post-index.html"><button>Compose a post</button></a></li>
-            </ul>
-        </div>
-        <!-- end navbar -->
-    </div>
-    <!-- end header -->
+    <% if(isAuthenticated){%>
+        <% include partials/header %>
+    <% } else{%>
+        <% include partials/header-logged-in %>
+    <% } %>
     <div class="body">
         <h2 id="pageViewedFor"></h2>
         <div class="row">
@@ -35,24 +26,6 @@
     </div>
     <!-- end content -->
     <br></br>
-    <footer>
-        <div class="footer">
-            <div class="row">
-                <div class="col-8 contact">
-                    <h3>Contact us</h3>
-                    <ul class="medias">
-                        <li>Facebook</li>
-                        <li>Email</li>
-                        <li>Phone</li>
-                    </ul>
-                </div>
-                <!-- end col-8 contact -->
-                <div class="col-4 quote">
-                    <q>Good friend, good book, a sleepy conscience, that is an ideal life - Mark Twain</q>
-                </div>
-                <!-- end col-4 quote -->
-            </div>
-        </div>
-    </footer>
+    <% include partials/footer %>
 </body>
 </html>

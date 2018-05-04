@@ -1,5 +1,5 @@
 // the module when use: name(app)
-module.exports = function(app, express)
+module.exports = function(app, express, Passport, LocalStrategy)
 {
     var postsCtr = require('./posts-ctr');
     app.use(function(req, res, next)
@@ -19,11 +19,19 @@ module.exports = function(app, express)
     // home page route
     app.get('/', function(req, res)
     {
-        res.render('home-view-index.ejs');     
+        res.render('home-view-index.ejs', {isAuthenticated: req.isAuthenticated()});     
     });
     app.get('/home-view-index.html', function(req, res)
     {
-        res.render('home-view-index.ejs');     
+        // if(req.isAuthenticated())
+        // {
+        //     res.render('home-view-index-logged-in.ejs');
+        // }
+        // else
+        // {
+        //     res.render('home-view-index.ejs');
+        // }
+        res.render('home-view-index.ejs', {isAuthenticated: req.isAuthenticated()});
     });
     // each post route
     app.get('/post-view-index/:post_id', function(req, res)
@@ -36,7 +44,7 @@ module.exports = function(app, express)
         res.render('about-view.ejs');     
     });
     // Log in page route
-    app.get('/log-in-view-index.html', function(req, res)
+    app.route('/log-in-view-index.html').get(function(req, res)
     {
         res.render('log-in-view-index.ejs');     
     });
